@@ -1,0 +1,31 @@
+﻿@page
+@model TopicAuditModel
+@{
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>待审核主题</h4>
+        <form method="post">
+
+            @{if (Model.ForAudit != null &&Model.ForAudit.Count() > 0)
+                    {
+                        foreach (var item in Model.ForAudit)
+                        {
+                            <div class="form-group">
+                                <label><input type="checkbox" name="tid" value="@item.Id" /> @item.Title </label>
+                            </div>
+                        }
+
+                    }
+                 
+                else
+                {
+                    <p>没有待审核的。。</p>
+                }
+            }
+            <button type="submit" class=" btn btn-default">审核主题</button>
+        </form>
+    </div>
+</div>

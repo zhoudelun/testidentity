@@ -1,0 +1,46 @@
+﻿@page
+@model MyFaModel
+@{
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table">
+            <tr><th>标题</th>
+                <th>时间</th>
+            </tr>
+
+
+            @{
+                foreach (var item in Model.Info.Items)
+                {
+                    @:
+                    <tr>
+                        <td>
+                            <a asp-page="./FaDetail" asp-route-id="@item.Id">
+                                @item.Title
+                            </a>
+                        </td>
+                        <td>@item.CreateTime</td>
+                    </tr>
+
+                }
+            }
+        </table>
+
+    </div>
+</div>
+
+
+
+@{
+    var prevDisabled = !Model.Info.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Info.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./myfa" asp-route-pid="@(Model.Info.PageIndex-1)" class="btn btn-default @prevDisabled">
+    上页
+</a>
+<a asp-page="./myfa" asp-route-pid="@(Model.Info.PageIndex +1)" class="btn btn-default @nextDisabled">
+    下页
+</a>

@@ -1,0 +1,66 @@
+﻿@page
+@model SetModel
+@{ Layout = "~/Pages/Account/Manage/_Layout.cshtml";
+    ViewData["ActivePage"] = "Set";
+    ViewData["SubTitle"] = "修改我的配置";
+}
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+
+        $('#btnSearch').on('click', function () {
+            $('#log').html('');
+            $.get("/dd/set?handler=Zdl",
+                { term: $('#birds').val() },
+                function (d) {
+                    $.each(d, function (index, value, array) {
+                        $('<input type="radio" name="id" value="' + value.id + '" />' + value.title + value.value + '<br />')
+                            //$('<div id="' + value.id + '">').html(value.title + value.value)
+                            .prependTo('#log');
+                    });
+                });
+        });
+    });
+
+
+</script>
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<div class="row">
+    <div class="col-md-4">
+        <h4>设置所在地</h4>
+        <form method="post" class="form-horizontal">
+            @*一定要这个form post，才可以产生一个hidden，记录 "XSRF-TOKEN"*@
+
+            <div class="form-group">
+                <label for="birds">输入所在地: </label>
+                <input id="birds" value="冯营村委会" placeholder="冯营村">
+        
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" class="btn btn-primary" value="查询" id="btnSearch" />
+                </div>
+            </div>
+            <div class="ui-widget" style="margin-top:2em; font-family:Arial">
+                选择所在地:
+                <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content">
+                    <input type="radio" name="id" value="101" /><br />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-primary">关注</button>
+                    <br />
+                    <button type="submit" asp-page-handler="Zdl" class="btn btn-primary">设为归宿地</button>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+  
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

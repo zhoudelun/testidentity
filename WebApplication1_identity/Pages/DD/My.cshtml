@@ -1,0 +1,97 @@
+﻿@page
+@model MyModel
+@{
+    Layout = "~/Pages/Account/Manage/_Layout.cshtml";
+    ViewData["ActivePage"] = "My";
+    ViewData["SubTitle"] = "修改我的配置";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        @{
+            if (Model.UserExtend != null)
+            {
+
+                <section>
+                    <h4>我的所在地</h4>
+                    <p>@( Model.UserExtend?.BelongTeam?.Name ?? "未设置" ?? "未找到")  </p>
+                    <a asp-page="./Set">修改</a>
+                </section>
+                <br />
+                <section>
+                    <h4>我关注的地方</h4>
+                    @{
+                        if (Model.UserExtend.Team != null)
+                        {
+                            <p>
+                                <ul>
+                                    @foreach (var item in Model.UserExtend.Team)
+                                    {
+                                        <li>@(item.Team?.Name??"未设置")</li>
+                                    }
+                                </ul>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>未设置</p>
+                        }
+                    }
+                </section>
+                <section>
+                    <h4>我关注的主题</h4>
+                    @{
+                        if (Model.UserExtend.Topic != null)
+                        {
+                            <p>
+                                <ul>
+                                    @foreach (var item in Model.UserExtend.Topic)
+                                    {
+                                        <li>@item.Topic.Title</li>
+                                    }
+                                </ul>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>未设置</p>
+                        }
+                    }
+                    <a asp-page="./ZhuTi">修改</a>
+                </section>
+            }
+        }          
+
+        <br />
+
+        @{
+            if (Model.MyAddTopic != null)
+            {
+                <section>
+                    <h4>我添加的主题</h4>
+                    @if (Model.MyAddTopic.Count() > 0)
+                    {
+                        <p>
+                            <ul>
+                                @foreach (var item in Model.MyAddTopic)
+                                {
+                                    <li>@item.Title </li>
+                                }
+                            </ul>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>未设置</p>
+                    }
+                </section>
+            }
+        }
+            <section style="display:none;">
+                <form @*method="get" asp-page="./my" *@>
+                    @*<button type="submit" asp-page-handler="AB" >AB</button>*@
+                    <a asp-page-handler="AA">Link Text</a>
+                </form>
+            </section>
+   </div>
+   </div>

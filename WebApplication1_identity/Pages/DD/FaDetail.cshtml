@@ -1,0 +1,19 @@
+﻿@page
+@model FaDetailModel
+@{
+var i=Model.Info;
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>@i.Title</h4>
+        <h6>@i.CreateTime</h6>
+        <div>
+            @i.Content
+        </div>
+        <div>
+            <label>主题</label>
+            <p>@i.Topic?.Title</p>
+        </div>
+    </div>
+</div>

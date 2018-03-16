@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<div>@Model.Identity1.Name</div>
-<div></div>
+<div>@(Model.Identity1?.Name??"请登录")</div>
+<div>@(Model.Myname)</div>
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>

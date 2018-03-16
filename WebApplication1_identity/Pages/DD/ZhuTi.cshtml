@@ -1,0 +1,77 @@
+﻿@page
+@model  ZhuTiModel
+@{
+    Layout = "~/Pages/Account/Manage/_Layout.cshtml";
+    ViewData["ActivePage"] = "ZhuTi";
+    ViewData["SubTitle"] = "修改我的配置";
+}
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<div class="row">
+    <div class="col-md-4">
+
+        <section>
+            <h4>我关注的主题</h4>
+            @{
+                if (Model.MyTopic != null && Model.MyTopic.Items.Count() > 0)
+                {
+                    <p>
+                        <ul>
+                            @foreach (var item in Model.MyTopic.Items)
+                            {
+                                <li>@item.Title</li>
+                            }
+                        </ul>
+                    </p>
+                }
+                else
+                {
+                    <p>还没设置</p>
+                }
+            }
+        </section>
+        <hr />
+        <section>
+            <h4>推荐主题</h4>
+            <form method="post">
+                @{
+
+                    var my = Model.MyTopic?.Items.Select(s => s.Id).ToArray()??null;
+                    my=my==null? new int[] { 0 }:my;
+                    
+
+                    <div class="form-group">
+                        @{
+                            if (Model.AllTopic != null)
+                            {
+                                foreach (var item in Model.AllTopic)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="tid" value="@item.Id"
+                                                   @( my.Contains(item.Id) ? "checked" : "") />@item.Title
+                                            </label>
+                                        </div>
+                                }
+                            }
+                        }
+
+                    </div>
+                }
+                <button type="submit" class=" btn btn-default" asp-page-handler="SetMy">关注</button>
+            </form>
+
+        </section>
+        <hr />
+        <section>
+            <h4><a asp-page="./ZhuTiOpe">添加主题</a></h4>
+            <h4><a asp-page="./My" asp-page-handler="myaddtopic">我添加的主题</a></h4>
+        </section>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

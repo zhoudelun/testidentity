@@ -11,9 +11,10 @@ using WebApplication1_identity.Data;
 namespace WebApplication1_identity.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180306052420_m3")]
+    partial class m3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,13 +235,15 @@ namespace WebApplication1_identity.Data.Migrations
 
                     b.Property<int>("InfoId");
 
-                    b.Property<long>("TeamId");
+                    b.Property<long?>("TeamCode");
+
+                    b.Property<int>("TeamId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InfoId");
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("TeamCode");
 
                     b.ToTable("InfoTeam");
                 });
@@ -276,51 +279,11 @@ namespace WebApplication1_identity.Data.Migrations
 
                     b.Property<long>("ParentCode");
 
-                    b.Property<int?>("TopicId");
-
                     b.HasKey("Code");
 
                     b.HasIndex("ParentCode");
 
-                    b.HasIndex("TopicId");
-
                     b.ToTable("Team");
-                });
-
-            modelBuilder.Entity("WebApplication1_identity.Data.TeamTag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("TagId");
-
-                    b.Property<long?>("TeamCode");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TagId");
-
-                    b.HasIndex("TeamCode");
-
-                    b.ToTable("TeamTag");
-                });
-
-            modelBuilder.Entity("WebApplication1_identity.Data.TeamTopic", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("TeamCode");
-
-                    b.Property<int?>("TopicId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamCode");
-
-                    b.HasIndex("TopicId");
-
-                    b.ToTable("TeamTopic");
                 });
 
             modelBuilder.Entity("WebApplication1_identity.Data.TestTable", b =>
@@ -394,30 +357,12 @@ namespace WebApplication1_identity.Data.Migrations
                     b.ToTable("UserExtend");
                 });
 
-            modelBuilder.Entity("WebApplication1_identity.Data.UserTeam", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("TeamId");
-
-                    b.Property<string>("UserExtendId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
-
-                    b.HasIndex("UserExtendId");
-
-                    b.ToTable("UserTeam");
-                });
-
             modelBuilder.Entity("WebApplication1_identity.Data.UserTopic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("TopicId");
+                    b.Property<int?>("TopicId");
 
                     b.Property<string>("UserExtendId");
 
@@ -490,7 +435,7 @@ namespace WebApplication1_identity.Data.Migrations
             modelBuilder.Entity("WebApplication1_identity.Data.InfoTag", b =>
                 {
                     b.HasOne("WebApplication1_identity.Data.Info", "Info")
-                        .WithMany("Tags")
+                        .WithMany()
                         .HasForeignKey("InfoId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -503,14 +448,13 @@ namespace WebApplication1_identity.Data.Migrations
             modelBuilder.Entity("WebApplication1_identity.Data.InfoTeam", b =>
                 {
                     b.HasOne("WebApplication1_identity.Data.Info", "Info")
-                        .WithMany("Teams")
+                        .WithMany()
                         .HasForeignKey("InfoId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WebApplication1_identity.Data.Team", "Team")
                         .WithMany("Infos")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TeamCode");
                 });
 
             modelBuilder.Entity("WebApplication1_identity.Data.Tag", b =>
@@ -526,32 +470,6 @@ namespace WebApplication1_identity.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ParentCode")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebApplication1_identity.Data.Topic")
-                        .WithMany("Team")
-                        .HasForeignKey("TopicId");
-                });
-
-            modelBuilder.Entity("WebApplication1_identity.Data.TeamTag", b =>
-                {
-                    b.HasOne("WebApplication1_identity.Data.Tag", "Tag")
-                        .WithMany("TeamTag")
-                        .HasForeignKey("TagId");
-
-                    b.HasOne("WebApplication1_identity.Data.Team", "Team")
-                        .WithMany("TeamTag")
-                        .HasForeignKey("TeamCode");
-                });
-
-            modelBuilder.Entity("WebApplication1_identity.Data.TeamTopic", b =>
-                {
-                    b.HasOne("WebApplication1_identity.Data.Team", "Team")
-                        .WithMany("Topic")
-                        .HasForeignKey("TeamCode");
-
-                    b.HasOne("WebApplication1_identity.Data.Topic", "Topic")
-                        .WithMany()
-                        .HasForeignKey("TopicId");
                 });
 
             modelBuilder.Entity("WebApplication1_identity.Data.Topic", b =>
@@ -564,8 +482,8 @@ namespace WebApplication1_identity.Data.Migrations
             modelBuilder.Entity("WebApplication1_identity.Data.TopicAudit", b =>
                 {
                     b.HasOne("WebApplication1_identity.Data.Topic", "Topic")
-                        .WithOne("TopicAudit")
-                        .HasForeignKey("WebApplication1_identity.Data.TopicAudit", "TopicId")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -577,24 +495,11 @@ namespace WebApplication1_identity.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WebApplication1_identity.Data.UserTeam", b =>
-                {
-                    b.HasOne("WebApplication1_identity.Data.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebApplication1_identity.Data.UserExtend", "UserExtend")
-                        .WithMany("Team")
-                        .HasForeignKey("UserExtendId");
-                });
-
             modelBuilder.Entity("WebApplication1_identity.Data.UserTopic", b =>
                 {
                     b.HasOne("WebApplication1_identity.Data.Topic", "Topic")
                         .WithMany("UserExtend")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TopicId");
 
                     b.HasOne("WebApplication1_identity.Data.UserExtend", "UserExtend")
                         .WithMany("Topic")

@@ -1,0 +1,11 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<ul class="nav nav-pills nav-stacked">
+    <li class="@ManageNavPages.MyNavClass(ViewContext)"><a asp-page="/dd/my">我的</a></li>
+    <li class="@ManageNavPages.SetClass(ViewContext)"><a asp-page="/dd/set">设置</a></li>
+    <li class="@ManageNavPages.ZhuTiClass(ViewContext)"><a asp-page="/dd/zhuti">主题</a></li>
+</ul>
+
