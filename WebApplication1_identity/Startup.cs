@@ -32,7 +32,9 @@ namespace WebApplication1_identity
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
                 //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options=> {
+                options.Password = new PasswordOptions() { RequireNonAlphanumeric = false, RequireUppercase = false,RequireLowercase=false, RequireDigit=false };
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -74,7 +76,7 @@ namespace WebApplication1_identity
             {
                 app.UseExceptionHandler("/Error");
             }
-
+            InitializeDatabase(app.ApplicationServices);
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -109,6 +111,26 @@ namespace WebApplication1_identity
             }
             return new Dictionary<Type, Type[]>();
         }
+
+        #region 初始化数据库
+        private void InitializeDatabase(IServiceProvider serviceProvider)
+        {
+            using (var serviceScope= serviceProvider.GetRequiredService<IServiceProvider>().CreateScope())
+            {
+                var db = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                db.Database.Migrate();
+                if (!db.Tag.Any())
+                {
+                    var l = new List<Tag>() {
+                        new Tag(){ Title="鸡蛋", Socre=20, DDUserId= "8f092a7c-9bff-48f6-a43c-3d6304a8348d"},
+                        new Tag(){ Title="地蛋", Socre=20, DDUserId= "8f092a7c-9bff-48f6-a43c-3d6304a8348d"},
+                    };
+                    db.Tag.AddRange(l);
+                    db.SaveChanges();
+                }
+            }
+        }
+        #endregion
     }
 
 

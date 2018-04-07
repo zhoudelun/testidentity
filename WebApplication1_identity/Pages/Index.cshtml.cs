@@ -22,8 +22,8 @@ namespace WebApplication1_identity.Pages
         public void OnGet()
         {
             var ue = _testService.Meth();
-            string s = ue.Result.Id;
-            Myname = User.Identity.Name;
+            string s = ue.Result?.Id;
+            Myname = User.Identity?.Name;
             Identity1 = User.Identity;
         }
 
