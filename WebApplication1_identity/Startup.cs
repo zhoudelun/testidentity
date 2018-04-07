@@ -37,7 +37,7 @@ namespace WebApplication1_identity
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            services.AddMemoryCache();//»º´æ×¢Èë
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
                 {
@@ -118,15 +118,23 @@ namespace WebApplication1_identity
             using (var serviceScope= serviceProvider.GetRequiredService<IServiceProvider>().CreateScope())
             {
                 var db = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                
                 db.Database.Migrate();
                 if (!db.Tag.Any())
                 {
-                    var l = new List<Tag>() {
-                        new Tag(){ Title="¼¦µ°", Socre=20, DDUserId= "8f092a7c-9bff-48f6-a43c-3d6304a8348d"},
-                        new Tag(){ Title="µØµ°", Socre=20, DDUserId= "8f092a7c-9bff-48f6-a43c-3d6304a8348d"},
-                    };
-                    db.Tag.AddRange(l);
-                    db.SaveChanges();
+                    string userid = string.Empty;
+                    var _user = db.UserExtend.FirstOrDefault();
+                    if(_user!=null )
+                    {
+                        userid = _user.Id;
+                        var l = new List<Tag>() {
+                            new Tag(){ Title="¼¦µ°", Socre=20, DDUserId= userid},
+                            new Tag(){ Title="µØµ°", Socre=20, DDUserId= userid},
+                        };
+                        db.Tag.AddRange(l);
+                        db.SaveChanges();
+                    }
+
                 }
             }
         }

@@ -15,9 +15,9 @@ namespace WebApplication1_identity.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<UserExtend> Meth()
+        public async Task<ApplicationUser> Meth()
         {
-            var repo = _unitOfWork.GetRepository<UserExtend>();
+            var repo = _unitOfWork.GetRepository<ApplicationUser>();
             var value = await repo.FindAsync("bce25988-d32c-4038-90bc-4d865a5355ee");
             return value;
         }
@@ -58,13 +58,13 @@ namespace WebApplication1_identity.Services
         /// </summary>
         /// <param name="Id"></param>
         /// <returns>所属team，关注topic</returns>
-        public async Task<UserExtend> GetUserExtendAsync(string Id)
+        public async Task<ApplicationUser> GetUserExtendAsync(string Id)
         {
-            var repo = _unitOfWork.GetRepository<UserExtend>();
+            var repo = _unitOfWork.GetRepository<ApplicationUser>();
             //var _d = await repo.GetFirstOrDefaultAsync(w => w.Id == Id, null, 
             //q => q.Include(i => i.BelongTeam), true);
             var _dtopic = await repo.GetFirstOrDefaultAsync(w => w.Id == Id, null,
-                q => q.Include(i => i.BelongTeam)
+                q => q.Include(i => i.BelongTeam)//attention. null???
                 .Include(i => i.Topic).ThenInclude(ut => ut.Topic)
                 .Include(i => i.Team).ThenInclude(ut => ut.Team),
                 true);
@@ -77,9 +77,9 @@ namespace WebApplication1_identity.Services
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public async Task<UserExtend> GetInfoInputAsync(string Id)
+        public async Task<ApplicationUser> GetInfoInputAsync(string Id)
         {
-            var repo = _unitOfWork.GetRepository<UserExtend>();
+            var repo = _unitOfWork.GetRepository<ApplicationUser>();
             var _dt = await repo.GetFirstOrDefaultAsync(w => w.Id == Id, null,
                 q => q//.Include(i => i.BelongTeam)
                     .Include(i => i.Topic).ThenInclude(ut => ut.Topic)//智能提示 
@@ -92,10 +92,10 @@ namespace WebApplication1_identity.Services
         }
         #endregion
         [Obsolete("use the next async.")]
-        public void SetUserExtend(UserExtend userExtend)
+        public void SetUserExtend(ApplicationUser userExtend)
         {
-            var repo = _unitOfWork.GetRepository<UserExtend>();
-            UserExtend _d = repo.GetFirstOrDefault(w => w.Id == userExtend.Id, null, null, true);
+            var repo = _unitOfWork.GetRepository<ApplicationUser>();
+            ApplicationUser _d = repo.GetFirstOrDefault(w => w.Id == userExtend.Id, null, null, true);
             if (_d == null)
             {
                 repo.Insert(userExtend);
@@ -114,9 +114,9 @@ namespace WebApplication1_identity.Services
         /// </summary>
         /// <param name="userExtend"></param>
         /// <returns></returns>
-        public async Task SetUserExtendAsync(UserExtend userExtend)
+        public async Task SetUserExtendAsync(ApplicationUser userExtend)
         {
-            var repo = _unitOfWork.GetRepository<UserExtend>();
+            var repo = _unitOfWork.GetRepository<ApplicationUser>();
             var _d = await repo.GetFirstOrDefaultAsync(w => w.Id == userExtend.Id, null, null, false);
             if (_d == null)
             {
@@ -163,7 +163,7 @@ namespace WebApplication1_identity.Services
         /// <returns></returns> 
         public async Task<IPagedList<Topic>> GetTeamTopicAsnyc(string Id)
         {
-            var r = _unitOfWork.GetRepository<UserExtend>();
+            var r = _unitOfWork.GetRepository<ApplicationUser>();
             var x = await r.GetFirstOrDefaultAsync(u => u.Id == Id, null, null, true);//2methd with the same name, but 5 or 4 params.so need make the number.
             var teamid = x.BelongTeamId;//首先查到teamid
 

@@ -24,7 +24,7 @@ namespace WebApplication1_identity.Data
         public string Des { get; set; }//描述
 
         public string DDUserId { get; set; }//DDUserID must the same as the UserExtend ,this is string .if int will not well.
-        public UserExtend DDUser { get; set; }//creater
+        public ApplicationUser DDUser { get; set; }//creater
 
         public DateTime CreatTime { get; set; }
         public ICollection<Info> Infos { get; set; }
@@ -59,7 +59,7 @@ namespace WebApplication1_identity.Data
     public class UserTopic {
         public int Id { get; set; }
         public string    UserExtendId { get; set; }//添加了便于使用啊
-        public UserExtend UserExtend { get; set; }
+        public ApplicationUser UserExtend { get; set; }
 
         public int TopicId { get; set; }//添加了便于使用啊
         public Topic Topic { get; set; }
@@ -68,7 +68,7 @@ namespace WebApplication1_identity.Data
     {
         public int Id { get; set; }
         public string UserExtendId { get; set; }
-        public UserExtend UserExtend { get; set; }
+        public ApplicationUser UserExtend { get; set; }
         public long TeamId { get; set; }
         public Team Team { get; set; }
     }

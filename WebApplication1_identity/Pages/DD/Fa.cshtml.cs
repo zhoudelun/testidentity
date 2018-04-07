@@ -46,7 +46,8 @@ namespace WebApplication1_identity.Pages.DD
         }
         public async Task<IActionResult> OnGetAsync()
         {
-            var _u= await _testService.GetInfoInputAsync(CurrentUser.Id);
+            var _u = await _userManager.GetUserAsync(User);
+            _u= await _testService.GetInfoInputAsync(_u.Id);
             var _l = _u.Topic.Select(s => s.Topic).ToList();
             if (_l == null || _l.Count() == 0)
             {

@@ -134,6 +134,8 @@ namespace WebApplication1_identity.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<long>("BelongTeamId");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -145,6 +147,12 @@ namespace WebApplication1_identity.Data.Migrations
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("MyTags");
+
+                    b.Property<string>("MyTeams");
+
+                    b.Property<string>("MyTopic");
 
                     b.Property<string>("MyWords")
                         .HasMaxLength(20);
@@ -161,6 +169,8 @@ namespace WebApplication1_identity.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<int>("Score");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<bool>("TwoFactorEnabled");
@@ -169,6 +179,8 @@ namespace WebApplication1_identity.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BelongTeamId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -380,19 +392,7 @@ namespace WebApplication1_identity.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("BelongTeamId");
-
-                    b.Property<string>("MyTags");
-
-                    b.Property<string>("MyTeams");
-
-                    b.Property<string>("MyTopic");
-
-                    b.Property<int>("Score");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("BelongTeamId");
 
                     b.ToTable("UserExtend");
                 });
@@ -478,9 +478,17 @@ namespace WebApplication1_identity.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("WebApplication1_identity.Data.ApplicationUser", b =>
+                {
+                    b.HasOne("WebApplication1_identity.Data.Team", "BelongTeam")
+                        .WithMany()
+                        .HasForeignKey("BelongTeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("WebApplication1_identity.Data.Info", b =>
                 {
-                    b.HasOne("WebApplication1_identity.Data.UserExtend", "DDUser")
+                    b.HasOne("WebApplication1_identity.Data.ApplicationUser", "DDUser")
                         .WithMany("Info")
                         .HasForeignKey("DDUserId");
 
@@ -518,7 +526,7 @@ namespace WebApplication1_identity.Data.Migrations
 
             modelBuilder.Entity("WebApplication1_identity.Data.Tag", b =>
                 {
-                    b.HasOne("WebApplication1_identity.Data.UserExtend", "DDUser")
+                    b.HasOne("WebApplication1_identity.Data.ApplicationUser", "DDUser")
                         .WithMany()
                         .HasForeignKey("DDUserId");
                 });
@@ -559,7 +567,7 @@ namespace WebApplication1_identity.Data.Migrations
 
             modelBuilder.Entity("WebApplication1_identity.Data.Topic", b =>
                 {
-                    b.HasOne("WebApplication1_identity.Data.UserExtend", "DDUser")
+                    b.HasOne("WebApplication1_identity.Data.ApplicationUser", "DDUser")
                         .WithMany()
                         .HasForeignKey("DDUserId");
                 });
@@ -572,14 +580,6 @@ namespace WebApplication1_identity.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WebApplication1_identity.Data.UserExtend", b =>
-                {
-                    b.HasOne("WebApplication1_identity.Data.Team", "BelongTeam")
-                        .WithMany()
-                        .HasForeignKey("BelongTeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("WebApplication1_identity.Data.UserTeam", b =>
                 {
                     b.HasOne("WebApplication1_identity.Data.Team", "Team")
@@ -587,7 +587,7 @@ namespace WebApplication1_identity.Data.Migrations
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WebApplication1_identity.Data.UserExtend", "UserExtend")
+                    b.HasOne("WebApplication1_identity.Data.ApplicationUser", "UserExtend")
                         .WithMany("Team")
                         .HasForeignKey("UserExtendId");
                 });
@@ -599,7 +599,7 @@ namespace WebApplication1_identity.Data.Migrations
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WebApplication1_identity.Data.UserExtend", "UserExtend")
+                    b.HasOne("WebApplication1_identity.Data.ApplicationUser", "UserExtend")
                         .WithMany("Topic")
                         .HasForeignKey("UserExtendId");
                 });

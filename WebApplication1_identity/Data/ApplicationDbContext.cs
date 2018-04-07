@@ -14,7 +14,7 @@ namespace WebApplication1_identity.Data
         {
         }
 
-
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<TestTable> TestTable { get; set; }
         public DbSet<UserExtend> UserExtend { get; set; }
         public DbSet<Team> Team { get; set; }

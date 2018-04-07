@@ -28,7 +28,7 @@ namespace WebApplication1_identity.Data
         [MaxLength(100)]
         public string Content { get; set; }
         public string DDUserId { get; set; }
-        public UserExtend DDUser { get; set; }//作者
+        public ApplicationUser DDUser { get; set; }//作者
         public DateTime CreateTime { get; set; }//发帖日期
         //[DisplayFormat(NullDisplayText = "暂无")]
         public int InfoStatus { get; set; }//枚举mysql可能不支持

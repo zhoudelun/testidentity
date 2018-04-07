@@ -10,12 +10,12 @@ namespace WebApplication1_identity.Services
 {
     public interface ITestService
     {
-        Task<UserExtend> Meth();
+        Task<ApplicationUser> Meth();
         Task<TestTable> GetById(int id);
         Task<TestTable> GetCurrentUserAsync(ApplicationUser user);
-        Task<UserExtend> GetUserExtendAsync(string Id);
-        Task<UserExtend> GetInfoInputAsync(string Id);
-        Task SetUserExtendAsync(UserExtend userExtend);
+        Task<ApplicationUser> GetUserExtendAsync(string Id);
+        Task<ApplicationUser> GetInfoInputAsync(string Id);
+        Task SetUserExtendAsync(ApplicationUser userExtend);
        
         Task<IPagedList<TeamDTO>> GetTeamAsync(string name);
         Task<IPagedList<Topic>> GetTopicAsync(string Id);

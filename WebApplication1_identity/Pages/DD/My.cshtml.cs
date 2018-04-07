@@ -27,7 +27,7 @@ namespace WebApplication1_identity.Pages.DD
             _testService = testService;
         }
         public int IsOk { get; set; } = 100;
-        public UserExtend UserExtend { get; set; } 
+        public ApplicationUser UserExtend { get; set; } 
         public IList<Topic> MyAddTopic { get; set; }
       
         /// <summary>

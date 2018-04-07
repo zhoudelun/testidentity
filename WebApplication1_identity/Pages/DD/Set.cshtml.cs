@@ -42,11 +42,11 @@ namespace WebApplication1_identity.Pages.DD
         public async Task OnPost(long id)
         {
             ApplicationUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
-            var _ue = new UserExtend { Id = user.Id };
+            var _ue = new ApplicationUser { Id = user.Id };
             var _t = new List<UserTeam>();
             _t.Add(new UserTeam {TeamId=id,UserExtendId= user.Id });
             
-            await _testService.SetUserExtendAsync(new UserExtend
+            await _testService.SetUserExtendAsync(new ApplicationUser
             {
                 Id = user.Id,
                 Team = _t 
@@ -61,7 +61,7 @@ namespace WebApplication1_identity.Pages.DD
         public async Task<IActionResult>  OnPostZdlAsync(long id)
         {
             ApplicationUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
-            await _testService.SetUserExtendAsync(new UserExtend
+            await _testService.SetUserExtendAsync(new ApplicationUser
             {
                 Id = user.Id,
                 BelongTeamId = id,

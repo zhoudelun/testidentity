@@ -1,5 +1,6 @@
 ﻿@page
 @model AboutModel
+@using  WebApplication1_identity.ViewComponents
 @{
     ViewData["Title"] = "关于";
 }
@@ -7,3 +8,4 @@
 <h3>@Model.Message</h3>
 
 <p>农村合作社，农业生成，建立一个合作平台。</p>
+@(await Component.InvokeAsync<TopicRankList>(new { tops = 5 }))
