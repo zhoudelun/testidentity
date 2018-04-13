@@ -15,7 +15,8 @@ namespace WebApplication1_identity.Data
         public string MyWords { get; set; }
 
 
-        public long BelongTeamId { get; set; }
+        public long? BelongTeamId { get; set; } = null;
+
         public Team BelongTeam { get; set; }//所属
 
         public string MyTopic { get; set; }//我关注的topic

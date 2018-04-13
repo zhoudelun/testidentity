@@ -38,15 +38,15 @@ namespace WebApplication1_identity.Pages.Account
 
         public class InputModel
         {
-            //[Required]
-            [EmailAddress]
-            public string Email { get; set; }
-            [Required]
+            ////[Required]
+            //[EmailAddress]
+            //public string Email { get; set; }
+            [Required(ErrorMessage = "{0}不能为空")]
             [Display(Name = "用户名")]
             public string UserName { get; set; }
 
 
-            [Required]
+            [Required(ErrorMessage = "{0}不能为空")]
             [StringLength(16, ErrorMessage = "{0} 必须大于 {2} 位", MinimumLength = 6)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
@@ -95,7 +95,7 @@ namespace WebApplication1_identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "用户名或密码不对.");
                     return Page();
                 }
             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WebApplication1_identity.Data;
 using WebApplication1_identity.Pages.DD;
@@ -16,7 +17,8 @@ namespace WebApplication1_identity.Services
         Task<ApplicationUser> GetUserExtendAsync(string Id);
         Task<ApplicationUser> GetInfoInputAsync(string Id);
         Task SetUserExtendAsync(ApplicationUser userExtend);
-       
+
+        Task<Team> GetTeamAsync(Expression<Func<Team, bool>> predicate);
         Task<IPagedList<TeamDTO>> GetTeamAsync(string name);
         Task<IPagedList<Topic>> GetTopicAsync(string Id);
         Task<bool> SetTopicAsync(string Id, int[] tid);

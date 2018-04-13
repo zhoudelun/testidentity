@@ -7,20 +7,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplication1_identity.Services;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1_identity.Data;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplication1_identity.Pages.DD
 {
-    public class SetModel : PageModel
+    public class SetModel : BaseModel 
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITestService _testService;
+     
+     
+        public SetModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
+        {
+        }
         [TempData]
         public string StatusMessage { get; set; }
-        public SetModel(ITestService testService, UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-            _testService = testService  ;
-        }
         public void OnGet()
         {
         }
@@ -39,8 +38,13 @@ namespace WebApplication1_identity.Pages.DD
         /// 关注归属地，以便发布信息到这里
         /// </summary>
         /// <param name="id"></param>
-        public async Task OnPost(long id)
+        public async Task<IActionResult> OnPost(long id)
         {
+            var _team = await _testService.GetTeamAsync(f => f.Id == id);
+            if (_team == null)
+            {
+                return NotFound();
+            }
             ApplicationUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
             var _ue = new ApplicationUser { Id = user.Id };
             var _t = new List<UserTeam>();
@@ -52,6 +56,7 @@ namespace WebApplication1_identity.Pages.DD
                 Team = _t 
             });
             StatusMessage = "设置成功！";
+            return Page();
         }
         /// <summary>
         /// 设置belongteam归属地

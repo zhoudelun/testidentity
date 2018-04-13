@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WebApplication1_identity.Data;
 using WebApplication1_identity.Pages.DD;
@@ -48,10 +49,19 @@ namespace WebApplication1_identity.Services
         {
             var x = await _unitOfWork.GetRepository<Team>()
                  .GetPagedListAsync<TeamDTO>(
-                     s => new TeamDTO { id = s.Code, value = s.Name, title = s.Parent.Name },
+                     s => new TeamDTO { id = s.Id, value = s.Name, title = s.Parent.Name },
                      w => w.Name == name);
             return x;
         }
+
+
+        public async Task<Team> GetTeamAsync(Expression<Func<Team, bool>> predicate )
+        {
+            return await _unitOfWork.GetRepository<Team>() 
+                .GetFirstOrDefaultAsync(predicate, null,
+                null, true);
+        }
+
         /// <summary>
         /// 获取用户信息
         /// 重点
@@ -170,7 +180,7 @@ namespace WebApplication1_identity.Services
             var repo = _unitOfWork.GetRepository<TeamTopic>();//再去 关联表里找topic
             return await repo.GetPagedListAsync<Topic>(
                 s => s.Topic,
-                w => w.Team.Code == teamid,
+                w => w.Team.Id == teamid,
                 null,
                 q => q.Include(i => i.Topic)
             );
@@ -184,7 +194,7 @@ namespace WebApplication1_identity.Services
             var repo = _unitOfWork.GetRepository<TeamTopic>();//再去 关联表里找topic
             return await repo.GetPagedListAsync<Topic>(
                 s => s.Topic,
-                w => w.Team.Code == teamid,
+                w => w.Team.Id == teamid,
                 null,
                 q => q.Include(i => i.Topic)
             );
@@ -329,8 +339,9 @@ namespace WebApplication1_identity.Services
             return await _unitOfWork.GetRepository<Info>()
                 .GetFirstOrDefaultAsync(   f => f.Id == Id,null, 
                 i=>i.Include(q=>q.Topic)
-                ,false );
+                ,true );
         }
+
         #endregion
     }
 }

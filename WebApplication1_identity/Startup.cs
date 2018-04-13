@@ -13,6 +13,7 @@ using WebApplication1_identity.Data;
 using WebApplication1_identity.Services;
 using System.Reflection;
 using WebApplication1_identity.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplication1_identity
 {
@@ -64,7 +65,7 @@ namespace WebApplication1_identity
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -76,7 +77,7 @@ namespace WebApplication1_identity
             {
                 app.UseExceptionHandler("/Error");
             }
-            InitializeDatabase(app.ApplicationServices);
+           // InitializeDatabase(app.ApplicationServices);
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -88,6 +89,15 @@ namespace WebApplication1_identity
                     template: "{controller}/{action=Index}/{id?}");
             });
             app.UseStaticHttpContext();//action：需设置此，方可使用cookie的自定义方案。
+ 
+           // loggerFactory.AddConsole();//?
+ 
+            var _logger = loggerFactory.CreateLogger("Services");
+            _logger.LogError
+                ($"Total Services Registered: {100}");
+            _logger.LogWarning
+            ($"Ttttttttttttttttttttttttttttt: {100000111}");
+
         }
 
         /// <summary>  
@@ -112,33 +122,7 @@ namespace WebApplication1_identity
             return new Dictionary<Type, Type[]>();
         }
 
-        #region 初始化数据库
-        private void InitializeDatabase(IServiceProvider serviceProvider)
-        {
-            using (var serviceScope= serviceProvider.GetRequiredService<IServiceProvider>().CreateScope())
-            {
-                var db = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-                
-                db.Database.Migrate();
-                if (!db.Tag.Any())
-                {
-                    string userid = string.Empty;
-                    var _user = db.UserExtend.FirstOrDefault();
-                    if(_user!=null )
-                    {
-                        userid = _user.Id;
-                        var l = new List<Tag>() {
-                            new Tag(){ Title="鸡蛋", Socre=20, DDUserId= userid},
-                            new Tag(){ Title="地蛋", Socre=20, DDUserId= userid},
-                        };
-                        db.Tag.AddRange(l);
-                        db.SaveChanges();
-                    }
-
-                }
-            }
-        }
-        #endregion
+      
     }
 
 

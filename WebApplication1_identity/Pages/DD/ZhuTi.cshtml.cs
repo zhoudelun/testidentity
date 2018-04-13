@@ -9,16 +9,16 @@ using WebApplication1_identity.Services;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplication1_identity.Pages.DD
 {
     public class ZhuTiModel : BaseModel
     {
-        //private readonly UserManager<ApplicationUser> _userManager;
-        //private readonly ITestService _testService;
-        public ZhuTiModel(ITestService testService, UserManager<ApplicationUser> userManager) : base(testService, userManager)
+        public ZhuTiModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
         }
+         
         [TempData]
         public string StatusMessage { get; set; }
 

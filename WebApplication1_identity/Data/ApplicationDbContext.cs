@@ -13,8 +13,8 @@ namespace WebApplication1_identity.Data
             : base(options)
         {
         }
-
-        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Team2> Team2 { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }//不加没数据
         public DbSet<TestTable> TestTable { get; set; }
         public DbSet<UserExtend> UserExtend { get; set; }
         public DbSet<Team> Team { get; set; }

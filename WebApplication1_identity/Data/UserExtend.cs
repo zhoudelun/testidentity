@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,20 +25,44 @@ namespace WebApplication1_identity.Data
     {
 
         [Key]
-        public long Code { get; set; }//int不够： 从 -2^31 (-2,147,483,648) 到 2^31 - 1 (2,147,483,647) 的整型数据（所有数字）
+       
+        public long Id { get; set; }//int不够： 从 -2^31 (-2,147,483,648) 到 2^31 - 1 (2,147,483,647) 的整型数据（所有数字）
 
 
-        public long ParentCode { get; set; }
+        public long? ParentCode { get; set; }
+        [ForeignKey("ParentCode")]
+         
         public virtual Team Parent { get; set; }
 
         [MaxLength(30)]
         public string Name { get; set; }
         public int Level { get; set; }//一共5级 全在一起了 
-        public ICollection<InfoTeam> Infos { get; set; }
-        public ICollection<TeamTopic> Topic { get; set; }
-        public ICollection<TeamTag> TeamTag { get; set; }
-    }
 
+      //  public ICollection<InfoTeam> Infos { get; set; }
+        //public ICollection<TeamTopic> Topic { get; set; }
+        //public ICollection<TeamTag> TeamTag { get; set; }
+    }
+    public class Team2
+    {
+
+        [Key]
+
+        public long Id { get; set; }//int不够： 从 -2^31 (-2,147,483,648) 到 2^31 - 1 (2,147,483,647) 的整型数据（所有数字）
+
+
+        public long? ParentCode { get; set; }
+        [ForeignKey("ParentCode")]
+
+        public virtual Team Parent { get; set; }
+
+        [MaxLength(30)]
+        public string Name { get; set; }
+        public int Level { get; set; }//一共5级 全在一起了 
+
+        //  public ICollection<InfoTeam> Infos { get; set; }
+        //public ICollection<TeamTopic> Topic { get; set; }
+        //public ICollection<TeamTag> TeamTag { get; set; }
+    }
     public class TeamTopic
     {
         public int Id { get; set; }

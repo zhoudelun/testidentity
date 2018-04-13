@@ -6,25 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Principal;
 using WebApplication1_identity.Services;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplication1_identity.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ITestService _testService;
-        public IndexModel(ITestService testService)
+        private readonly ILogger _logger;
+        public IndexModel(ITestService testService, ILogger<IndexModel> logger)
         {
             _testService = testService;
+            _logger = logger;
+            //_logger = logger.CreateLogger("WebApplication1_identity.Pages.IndexModel");
         }
 
         public IIdentity Identity1 { get; set; }
-        public string Myname { get; set; }
+       
         public void OnGet()
         {
+            _logger.LogInformation("测试", "{id}", 101);
             var ue = _testService.Meth();
             string s = ue.Result?.Id;
-            Myname = User.Identity?.Name;
+ 
             Identity1 = User.Identity;
+            _logger.LogWarning("jigngao", "{id}", 102);
         }
 
         ///// <summary>

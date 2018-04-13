@@ -32,7 +32,8 @@ namespace WebApplication1_identity.Pages.Account.Manage
             _testService = testService;
         }
 
-        public string Username { get; set; }
+        [Display(Name ="用户名")]
+        public string Username { get; set; } 
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -44,12 +45,13 @@ namespace WebApplication1_identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
+
+            [Required(ErrorMessage = "{0}不能为空")]
             [EmailAddress]
             public string Email { get; set; }
 
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "电话")]
             public string PhoneNumber { get; set; }
         }
 

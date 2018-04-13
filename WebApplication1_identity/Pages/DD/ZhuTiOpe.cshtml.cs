@@ -8,14 +8,16 @@ using WebApplication1_identity.Data;
 using System.ComponentModel.DataAnnotations;
 using WebApplication1_identity.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplication1_identity.Pages.DD
 {
     public class ZhuTiOpeModel : BaseModel
     {
-        public ZhuTiOpeModel(ITestService testService, UserManager<ApplicationUser> userManager) : base(testService, userManager)
+        public ZhuTiOpeModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
         }
+ 
 
         public void OnGet()
         {

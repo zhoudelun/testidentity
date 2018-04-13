@@ -10,16 +10,17 @@ using WebApplication1_identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplication1_identity.Pages.DD
 {
     [Authorize]
     public class FaModel : BaseModel
     {
-        public FaModel(ITestService testService, UserManager<ApplicationUser> userManager) : base(testService, userManager)
+        public FaModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
-
         }
+
         [TempData]
         public string StatusMessage { get; set; }
         public SelectList LTopic { get; set; }
@@ -51,6 +52,7 @@ namespace WebApplication1_identity.Pages.DD
             var _l = _u.Topic.Select(s => s.Topic).ToList();
             if (_l == null || _l.Count() == 0)
             {
+                StatusMessage = "先关注的主题,才能发布信息:)";
                 return RedirectToPage("./ZhuTi");
             }
             LTopic =new SelectList(_l, "Id","Title");

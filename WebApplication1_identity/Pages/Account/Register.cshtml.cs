@@ -42,10 +42,10 @@ namespace WebApplication1_identity.Pages.Account
             [EmailAddress]
             [Display(Name = "邮箱")]
             public string Email { get; set; }
-            [Required]
+            [Required(ErrorMessage ="{0}不能为空")]
             [Display(Name = "用户名")]
             public string UserName { get; set; }
-            [Required]
+            [Required(ErrorMessage = "{0}不能为空")]
             [StringLength(16, ErrorMessage = "{0} 必须大于 {2} 位", MinimumLength = 6)]
             //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
@@ -56,6 +56,10 @@ namespace WebApplication1_identity.Pages.Account
             [Display(Name = "确认密码")]
             [Compare("Password", ErrorMessage = "两次输入密码不一致")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name ="手机")]
+            [StringLength(11, ErrorMessage = "{0} 长度应是 {2} 位", MinimumLength = 11)]
+            public string PhoneNumber { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
@@ -68,7 +72,7 @@ namespace WebApplication1_identity.Pages.Account
             ReturnUrl = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email };//改用username，默认是email
+                var user = new ApplicationUser { UserName = Input.UserName, Email = Input.Email, PhoneNumber= Input.PhoneNumber ,MyWords="hl,wd."};//改用username，默认是email
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -77,7 +81,7 @@ namespace WebApplication1_identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(Input.Email, callbackUrl);
-
+                   
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(Url.GetLocalUrl(returnUrl));
                 }

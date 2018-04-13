@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApplication1_identity.Data;
 using Microsoft.AspNetCore.Identity;
 using WebApplication1_identity.Services;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplication1_identity.Pages.Ma
 {
     public class TopicAuditModel : BaseModel
     {
-        public TopicAuditModel(ITestService testService, UserManager<ApplicationUser> userManager) : base(testService, userManager)
+        public TopicAuditModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
-
         }
+
+      
         public IList<Topic> ForAudit { get; set; }
 
         public void OnGet()

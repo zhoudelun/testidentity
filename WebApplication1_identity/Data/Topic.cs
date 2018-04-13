@@ -27,9 +27,9 @@ namespace WebApplication1_identity.Data
         public ApplicationUser DDUser { get; set; }//creater
 
         public DateTime CreatTime { get; set; }
-        public ICollection<Info> Infos { get; set; }
-        public ICollection<UserTopic> UserExtend { get; set; }
-        public ICollection<Team> Team { get; set; }
+        //public ICollection<Info> Infos { get; set; }
+        //public ICollection<UserTopic> UserExtend { get; set; }
+        //public ICollection<Team> Team { get; set; }
 
         public TopicAudit TopicAudit { get; set; }
 
@@ -56,6 +56,9 @@ namespace WebApplication1_identity.Data
         public DateTime CreatTime { get; set; }
 
     }
+    /// <summary>
+    /// usertopic关联表
+    /// </summary>
     public class UserTopic {
         public int Id { get; set; }
         public string    UserExtendId { get; set; }//添加了便于使用啊
