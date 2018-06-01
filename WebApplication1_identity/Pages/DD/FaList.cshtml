@@ -1,0 +1,86 @@
+﻿@page
+@model FaListModel
+@{
+}
+<div class="row">
+    <div class="clearfix" style="margin-bottom: 10px;">                </div><!-- 清除浮动 -->
+    <div class="col-md-12"> 
+    <section>
+
+        <form method="post" class="form-horizontal"   >
+            <div class="form-group"> 
+                    <label for="zhuti" class="col-sm-2 control-label">主题：</label>
+                <div class="col-md-10 col-lg-10 col-sm-10" >
+                    @Html.DropDownListFor(model => model.LTopic,
+Model.LTopic, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="weizhi" class="col-sm-2 control-label">所在地：</label>
+                <div class="col-sm-10"> 
+                    @Html.DropDownListFor(model => model.LTeam,
+Model.LTeam, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary"> 查找</button>
+                </div>
+
+            </div>
+        </form>
+  
+    </section>
+       </div>
+            @{
+                if (Model.Info != null && Model.Info.Items.Count > 0)
+                {
+
+                     
+                            <table class="table">
+                                <tr>
+                                    <th>标题</th>
+                                    <th>时间</th>
+                                </tr>
+
+
+                                @foreach (var item in Model.Info.Items)
+                                {
+                                    @:
+                                    <tr>
+                                        <td>
+                                            <a asp-page="./FaDetail" asp-route-id="@item.Id"  target="_blank">
+                                                @item.Title
+                                            </a>
+                                        </td>
+                                        <td>@item.CreateTime</td>
+                                    </tr>
+
+                                }
+                            </table>
+
+
+                    if (Model.Info.TotalCount > 20)
+                    { 
+                        var prevDisabled = !Model.Info?.HasPreviousPage ?? false ? "disabled" : "";
+                        var nextDisabled = !Model.Info?.HasNextPage ?? false ? "disabled" : ""; 
+
+                        <a asp-page="./myfa" asp-route-pid="@(Model.Info?.PageIndex??1-1)" class="btn btn-default @prevDisabled">
+                            上页
+                        </a>
+                        <a asp-page="./myfa" asp-route-pid="@(Model.Info?.PageIndex??1 +1)" class="btn btn-default @nextDisabled">
+                            下页
+                        </a> 
+                    }
+                }
+                else
+                {
+                        @:<p class="text-warning  text-center"> 无符合条件的信息 </p>
+
+                }
+            }
+
+    </div>
+ 

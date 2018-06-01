@@ -5,15 +5,13 @@ var i=Model.Info;
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div>
         <h4>@i.Title</h4>
-        <h6>@i.CreateTime</h6>
-        <div>
+        <h5>作者：@i.DDUser.UserName   @i.CreateTime</h5>
+     
+        <div>   
             @i.Content
         </div>
-        <div>
-            <label>主题</label>
-            <p>@i.Topic?.Title</p>
-        </div>
+        
     </div>
 </div>

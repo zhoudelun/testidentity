@@ -11,4 +11,5 @@ namespace WebApplication1_identity.Data
         public string value { get; set; }
         public string title { get; set; }
     }
+
 }

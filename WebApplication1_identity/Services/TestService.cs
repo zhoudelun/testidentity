@@ -47,6 +47,7 @@ namespace WebApplication1_identity.Services
 
         public async Task<IPagedList<TeamDTO>> GetTeamAsync(string name)
         {
+            name += "村委会";
             var x = await _unitOfWork.GetRepository<Team>()
                  .GetPagedListAsync<TeamDTO>(
                      s => new TeamDTO { id = s.Id, value = s.Name, title = s.Parent.Name },
@@ -88,7 +89,7 @@ namespace WebApplication1_identity.Services
         /// <param name="Id"></param>
         /// <returns></returns>
         public async Task<ApplicationUser> GetInfoInputAsync(string Id)
-        {
+        { 
             var repo = _unitOfWork.GetRepository<ApplicationUser>();
             var _dt = await repo.GetFirstOrDefaultAsync(w => w.Id == Id, null,
                 q => q//.Include(i => i.BelongTeam)
@@ -315,6 +316,12 @@ namespace WebApplication1_identity.Services
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
+
+        public async Task<Topic> TopicGetByIdAsync(int Id)
+        {
+            return await _unitOfWork.GetRepository<Topic>()
+                .FindAsync(Id);
+        }
         #endregion
         #region fabu
 
@@ -338,10 +345,22 @@ namespace WebApplication1_identity.Services
         {
             return await _unitOfWork.GetRepository<Info>()
                 .GetFirstOrDefaultAsync(   f => f.Id == Id,null, 
-                i=>i.Include(q=>q.Topic)
+                i=>i.Include(q=>q.DDUser)
                 ,true );
         }
 
+        public async Task<IPagedList<Info>> FaGetBySearchAsync(InfoSearchDTO info)
+        {
+            var repo = _unitOfWork.GetRepository<Info>();
+            return await repo.GetPagedListAsync<Info>(
+                s => s,
+                w => w.TopicId == info.TopicId && w.Teams.Any(a => a.TeamId == info.TeamId)
+                ,
+                q => q.OrderByDescending(o => o.Id),
+                null  //q=>q.Include(i=>i.Teams).ThenInclude(ut => ut.Team)
+                , info.Pid
+                );
+        }
         #endregion
     }
 }

@@ -4,8 +4,20 @@
 }
 
 <ul class="nav nav-pills nav-stacked">
-    <li class="@ManageNavPages.MyNavClass(ViewContext)"><a asp-page="/dd/my">我的</a></li>
-    <li class="@ManageNavPages.SetClass(ViewContext)"><a asp-page="/dd/set">设置</a></li>
-    <li class="@ManageNavPages.ZhuTiClass(ViewContext)"><a asp-page="/dd/zhuti">主题</a></li>
+
+    <li class="@ManageNavPages.SetClass(ViewContext)"><a asp-page="/DD/Set">所在地</a></li>
+    <li class="@ManageNavPages.ZhuTiClass(ViewContext)"><a asp-page="/DD/ZhuTi">主题</a></li>
+    <li class="@ManageNavPages.MyNavClass(ViewContext)"><a asp-page="/DD/My">我的设置</a></li>
+    
+    <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-page="/Account/Manage/Index">账号概况</a></li>
+ 
+    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-page="/Account/Manage/ChangePassword">密码</a></li>
+    @*@if (hasExternalLogins)
+    {
+        <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-page="/Account/Manage/ExternalLogins">扩展登录</a></li>
+    }
+    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-page="/Account/Manage/TwoFactorAuthentication">2因数验证</a></li>*@
+
+
 </ul>
 

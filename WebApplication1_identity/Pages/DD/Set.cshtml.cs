@@ -22,6 +22,7 @@ namespace WebApplication1_identity.Pages.DD
         public string StatusMessage { get; set; }
         public void OnGet()
         {
+            ;
         }
         /// <summary>
         /// ?handler=Zdl
@@ -72,7 +73,7 @@ namespace WebApplication1_identity.Pages.DD
                 BelongTeamId = id,
                 MyTeams = id.ToString()
             });
-            return RedirectToPage("./my");//"./dd.my" is no need.
+            return RedirectToPage("./My");//"./dd.my" is no need.
         }
          
     }

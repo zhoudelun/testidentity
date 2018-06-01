@@ -28,6 +28,8 @@ namespace WebApplication1_identity.Data
         public DbSet<UserTeam> UserTeam { get; set; }
         public DbSet<TeamTopic> TeamTopic { get; set; }
         public DbSet<TeamTag> TeamTag { get; set; }
+
+        public DbSet<Note> Note { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

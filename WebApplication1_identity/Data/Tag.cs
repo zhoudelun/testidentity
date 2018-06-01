@@ -11,9 +11,9 @@ namespace WebApplication1_identity.Data
     /// Tags Table.
     /// 估计有10000个
     /// </summary>
-    public class Tag
+    public class Tag:EntityBase
     {
-        public int Id { get; set; }
+       
         [MaxLength(10)]
         public string Title { get; set; }
 
@@ -24,4 +24,6 @@ namespace WebApplication1_identity.Data
         public ICollection<InfoTag> Infos { get; set; }
         public ICollection<TeamTag> TeamTag { get; set; }
     }
+
+
 }

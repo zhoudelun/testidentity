@@ -9,30 +9,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using WebApplication1_identity.Data;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
+using StackExchange.Profiling.Internal;
+using StackExchange.Profiling.Data;
+using StackExchange.Profiling;
+using System.Diagnostics;
+
 namespace WebApplication1_identity
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
+            var host = BuildWebHost(args); 
             using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
+                            {
+                                var services = scope.ServiceProvider;
 
-                try
-                {
-                    InitializeDatabase(services);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "初始化数据库失败.");
-                }
-            }
-
+                                try
+                                {
+                                    InitializeDatabase(services);
+                                }
+                                catch (Exception ex)
+                                {
+                                    var logger = services.GetRequiredService<ILogger<Program>>();
+                                    logger.LogError(ex, "初始化数据库失败.");
+                                }
+                            }
             host.Run();
+        
+
+
         }
         #region 初始化数据库
         private static  void InitializeDatabase(IServiceProvider serviceProvider)
@@ -40,7 +47,7 @@ namespace WebApplication1_identity
             using (var serviceScope = serviceProvider.GetRequiredService<IServiceProvider>().CreateScope())
             {
                 var db = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-
+                
                 db.Database.EnsureCreated();
                 db.Database.Migrate();
             

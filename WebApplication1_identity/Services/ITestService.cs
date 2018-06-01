@@ -30,8 +30,12 @@ namespace WebApplication1_identity.Services
         Task<IPagedList<Topic>> GetForAuditAsync(int c = 10);
         Task<IPagedList<Topic>> GetMyAddTopic(string Id);
         Task<bool> TopicAuditAsync(int[] tid);
+        Task<Topic> TopicGetByIdAsync(int Id);
+
+
         Task<bool> FaCreateAsync(Info  input);
         Task<IPagedList<Info>> FaGetByUserIdAsync(string Id,int pid);
+        Task<IPagedList<Info>> FaGetBySearchAsync(InfoSearchDTO info);
         Task<Info> FaGetByIdAsync(int Id);
     }
 }

@@ -11,13 +11,6 @@
         @{
             if (Model.UserExtend != null)
             {
-
-                <section>
-                    <h4>我的所在地</h4>
-                    <p>@( Model.UserExtend?.BelongTeam?.Name ?? "未设置" ?? "未找到")  </p>
-                    <a asp-page="./Set">修改</a>
-                </section>
-                <br />
                 <section>
                     <h4>我关注的地方</h4>
                     @{
@@ -36,7 +29,7 @@
                         {
                             <p>未设置</p>
                         }
-                    }
+                    }<a asp-page="./Set">修改</a>
                 </section>
                 <hr />
                 <section>
@@ -60,6 +53,14 @@
                     }
                     <a asp-page="./ZhuTi">修改</a>
                 </section>
+                <hr />
+
+                <section>
+                    <h4>我的所在地</h4>
+                    <p>@( Model.UserExtend?.BelongTeam?.Name ?? "未设置" ?? "未找到")  </p>
+                    <a asp-page="./Set">修改</a>
+                </section>
+                
             }
         }          
 

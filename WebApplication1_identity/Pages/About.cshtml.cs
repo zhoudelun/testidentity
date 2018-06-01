@@ -12,7 +12,7 @@ namespace WebApplication1_identity.Pages
 
         public void OnGet()
         {
-            Message = "Your application description page.";
+            Message = "呼呼(_　_)。゜zｚＺ";
         }
     }
 }

@@ -14,6 +14,8 @@ using WebApplication1_identity.Services;
 using System.Reflection;
 using WebApplication1_identity.Extensions;
 using Microsoft.Extensions.Logging;
+using StackExchange.Profiling.Internal;
+using StackExchange.Profiling.Data;
 
 namespace WebApplication1_identity
 {
@@ -22,6 +24,8 @@ namespace WebApplication1_identity
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var initializer = new DiagnosticInitializer(new[] { new RelationalDiagnosticListener() });
+            initializer.Start();
         }
 
         public IConfiguration Configuration { get; }
@@ -62,6 +66,7 @@ namespace WebApplication1_identity
             services.AddScoped(typeof(ITestService), typeof(TestService));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//注入HttpContextAccessor，使用httpcontext，比如cookie
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,5 +7,22 @@
 <h2>@ViewData["Title"]</h2>
 <h3>@Model.Message</h3>
 
-<p>农村合作社，农业生成，建立一个合作平台。</p>
-@(await Component.InvokeAsync<TopicRankList>(new { tops = 5 }))
+<address>
+    <strong>免费</strong><br />
+    本网站不收取任何费用！<br />
+    <abbr title="Phone">P:</abbr>
+    请遵守网络规范，打造一个专业的平台，不要发布无关内容。
+    <br />
+    <p class="text-danger">一经发现，永久拉黑。</p>
+</address>
+<p>农村合作，农业生产，建立一个高效、互助的平台。    </p>
+
+<br />
+<br />
+<br />
+<address>
+    <strong>技术支持:</strong> <a href="mailto:Support@example.com">火凤凰</a><br />
+    <strong>联系邮箱:</strong> <a href="mailto:236509441@qq.com">236509441@qq.com</a>
+</address>
+
+@*@(await Component.InvokeAsync<TopicRankList>(new { tops = 5 }))*@

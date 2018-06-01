@@ -29,7 +29,7 @@ namespace WebApplication1_identity.Data
         {
             Response.Redirect("/404.html");
             return null;//            return base.NotFound(); 
-        }
+        } 
         public   ApplicationUser CurrentUser {
             get {
                 string my = User.Identity.Name;

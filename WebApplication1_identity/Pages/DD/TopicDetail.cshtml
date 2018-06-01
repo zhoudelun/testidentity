@@ -1,0 +1,17 @@
+﻿@page
+@model TopicDetailModel
+@{
+    var d= Model.Topic;
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>主题——<strong>@d.Title</strong></h4>
+        <h6>@d.CreatTime</h6>
+        <div>
+            @d.Des
+        </div>
+        
+    </div>
+</div>

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using System.Diagnostics;
+using StackExchange.Profiling;
 
 namespace WebApplication1_identity.Pages.DD
 {
@@ -47,8 +49,9 @@ namespace WebApplication1_identity.Pages.DD
         }
         public async Task<IActionResult> OnGetAsync()
         {
-            var _u = await _userManager.GetUserAsync(User);
-            _u= await _testService.GetInfoInputAsync(_u.Id);
+            //var _u = await _userManager.GetUserAsync(User);//通过User获取IdentityUser，包含了所有继承后的props.
+            //_u = await _userManager.FindByIdAsync(_u.Id);//也可以通过id
+            var _u = await _testService.GetInfoInputAsync(CurrentUser.Id) ;//或者直接通过Current.Id,自己写个，从数据库里获取
             var _l = _u.Topic.Select(s => s.Topic).ToList();
             if (_l == null || _l.Count() == 0)
             {

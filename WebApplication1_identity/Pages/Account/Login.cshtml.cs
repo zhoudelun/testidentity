@@ -49,9 +49,10 @@ namespace WebApplication1_identity.Pages.Account
             [Required(ErrorMessage = "{0}不能为空")]
             [StringLength(16, ErrorMessage = "{0} 必须大于 {2} 位", MinimumLength = 6)]
             [DataType(DataType.Password)]
+            [Display(Name ="密码")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "记住?")]
             public bool RememberMe { get; set; }
         }
 

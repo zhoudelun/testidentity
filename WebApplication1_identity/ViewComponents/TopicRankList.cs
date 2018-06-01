@@ -10,7 +10,7 @@ namespace WebApplication1_identity.ViewComponents
 {
     /// <summary>
     /// 使用单独的view
-    /// razor page 可以这其model里实现？
+    /// razor page 可以在其model里实现？
     /// </summary>
     public class TopicRankList: ViewComponent
     {

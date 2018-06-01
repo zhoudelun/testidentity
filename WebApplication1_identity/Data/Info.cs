@@ -12,9 +12,8 @@ namespace WebApplication1_identity.Data
     /// 最直接的Data，produce
     /// 
     /// </summary>
-    public class Info
-    {
-        public int Id { get; set; }
+    public class Info:EntityBase
+    { 
 
         public int TopicId { get; set; }
         public Topic Topic { get; set; }//主题只能是一个了

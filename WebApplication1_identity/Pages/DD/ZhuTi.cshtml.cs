@@ -28,7 +28,7 @@ namespace WebApplication1_identity.Pages.DD
         public  async Task<IActionResult>  OnGetAsync()
         {
             var id = CurrentUser.Id;
-            MyTopic =  await _testService.GetTopicAsync(id);//我的
+            //MyTopic =  await _testService.GetTopicAsync(id);//我的
             AllTopic = _testService.GetAllTopicAsnyc(11).Result.Items;//所有可用的
 
             return Page();             
@@ -55,7 +55,8 @@ namespace WebApplication1_identity.Pages.DD
             if (ModelState.IsValid)
             {
                 var b= await _testService.SetTopicAsync(CurrentUser.Id,tid);
-                return RedirectToPage("./ZhuTi"); //No page named '.ZhuTi' matches the supplied values.
+                return RedirectToPage("./My");
+                //return RedirectToPage("./ZhuTi"); //No page named '.ZhuTi' matches the supplied values.
                 //return RedirectToAction(".ZhuTi");//  No route matches the supplied values.Must have a get of actionrresult.
             }          
             return Page();

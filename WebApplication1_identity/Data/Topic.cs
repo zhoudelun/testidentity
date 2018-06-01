@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace WebApplication1_identity.Data
 {
+    public class EntityBase
+    {
+        public int Id { get; set; }
+    }
     /// <summary>
     /// topic表，中心词表
     /// 以生产为主题，一起来！扩展生活所需
@@ -16,9 +20,9 @@ namespace WebApplication1_identity.Data
     /// 卖地蛋（1.5一斤），卖大蒜（5毛）-->应集为一个？？tag应为大蒜/地蛋。。。所以，tag还是要留。
     /// 卖煎饼，鸡蛋，提供婚宴，一条龙等商业衍生品（农民息息相关）
     /// </summary>
-    public class Topic
+    public class Topic : EntityBase
     {
-        public int Id { get; set; }
+
         [MaxLength(10)]
         public string Title { get; set; }
         public string Des { get; set; }//描述
