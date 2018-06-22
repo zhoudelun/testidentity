@@ -23,7 +23,8 @@ namespace WebApplication1_identity.Pages.DD
         {
             ;
         }
-
+        [TempData]
+        public string StatusMessage { get; set; }
         [BindProperty]
         public InputModel Input { get; set; }
         public class InputModel
@@ -46,8 +47,8 @@ namespace WebApplication1_identity.Pages.DD
             {
                 var b = _testService.AddTopic(new Topic { Title = Input.Title, DDUserId = CurrentUser.Id, CreatTime = DateTime.Now, Des = Input.Des });
                 if (b.Result)
-                {
-                    return RedirectToPage("./my","myaddtopic"); //RedirectToPage("./my?handler=myaddtopic"); //No page named './my?handler=myaddtopic' matches the supplied values.
+                { 
+                    return RedirectToPage("./my", "myaddtopic", new {msg= "«Îµ»∫Ú…Û∫À"}); //RedirectToPage("./my?handler=myaddtopic"); //No page named './my?handler=myaddtopic' matches the supplied values.
                 }
                 else
                 {

@@ -1,56 +1,58 @@
-﻿    @page
-    @model MyFaModel
-    @{
-    }
+﻿@page
+@model MyFaModel
+@{
+}
+ 
+<div class="row">
+    <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
 
-    <div class="row">
-        <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+    @{if (Model.Info != null && Model.Info.Items.Count > 0)
+        {
+
+            <table class="table">
+                <tr>
+                    <th>标题</th>
+                    <th>时间</th>
+                    <th>状态</th>
+                </tr>
 
 
-        @{if (Model.Info != null && Model.Info.Items.Count > 0)
-            {
-                
-                <table class="table">
+                @foreach (var item in Model.Info.Items)
+                {
+                    @:
                     <tr>
-                        <th>标题</th>
-                        <th>时间</th>
+                        <td>
+                            <a asp-page="./FaDetail" asp-route-id="@item.Id">
+                                @(string.IsNullOrEmpty( item.Title)?"无标题":item.Title)
+                            </a>
+                        </td>
+                        <td>@item.CreateTime</td>
+                        <td>@(item.IsPublish??false?"审核通过":"审核中")</td>
                     </tr>
 
-
-                    @foreach (var item in Model.Info.Items)
-                    {
-                        @:
-                        <tr>
-                            <td>
-                                <a asp-page="./FaDetail" asp-route-id="@item.Id">
-                                    @item.Title
-                                </a>
-                            </td>
-                            <td>@item.CreateTime</td>
-                        </tr>
-
-                    } 
-
-                </table>
-
-                if (Model.Info.TotalCount > 20)
-                { 
-                    var prevDisabled = !Model.Info.HasPreviousPage ? "disabled" : "";
-                    var nextDisabled = !Model.Info.HasNextPage ? "disabled" : "";
-
-
-                    <a asp-page="./myfa" asp-route-pid="@(Model.Info.PageIndex-1)" class="btn btn-default @prevDisabled">
-                        上页
-                    </a>
-                    <a asp-page="./myfa" asp-route-pid="@(Model.Info.PageIndex +1)" class="btn btn-default @nextDisabled">
-                        下页
-                    </a> 
                 }
-            }
-            else
-            {
-                @:<p class="text-warning  text-center"> 无符合条件的信息 </p>
-            }
-}
 
-    </div>
+            </table>
+
+            if (Model.Info.TotalCount > 20)
+            {
+                var prevDisabled = !Model.Info.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.Info.HasNextPage ? "disabled" : "";
+
+
+                <a asp-page="./myfa" asp-route-pid="@(Model.Info.PageIndex-1)" class="btn btn-default @prevDisabled">
+                    上页
+                </a>
+                <a asp-page="./myfa" asp-route-pid="@(Model.Info.PageIndex +1)" class="btn btn-default @nextDisabled">
+                    下页
+                </a>
+            }
+        }
+        else
+        {
+            @:<p class="text-warning  text-center"> 无符合条件的信息 </p>
+        }
+    }
+
+</div>

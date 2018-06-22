@@ -13,16 +13,16 @@ namespace WebApplication1_identity.Pages.DD
 {
     public class SetModel : BaseModel 
     {
-     
-     
+
+        [TempData]
+        public string StatusMessage { get; set; }
         public SetModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
         }
-        [TempData]
-        public string StatusMessage { get; set; }
-        public void OnGet()
+        
+        public IActionResult OnGet(string msg="")
         {
-            ;
+            StatusMessage = msg; return Page();
         }
         /// <summary>
         /// ?handler=Zdl

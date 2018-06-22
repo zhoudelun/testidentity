@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace WebApplication1_identity.Data
 {
-    public class EntityBase
+    public class EntityBase: IsPublish
     {
         public int Id { get; set; }
+
+        public bool? IsPublish { get; set; } //需要审核
     }
     /// <summary>
     /// topic表，中心词表
@@ -54,7 +56,7 @@ namespace WebApplication1_identity.Data
         public Topic Topic { get; set; }
 
 
-        public int Count { get; set; }//count>10时，即可转正 
+        public int Count { get; set; }//count>10时，即可转正 ：update IsPublish true
         [MaxLength(50)]
         public string Reason { get; set; }//返回user 未通过的结果原因等信息
         public DateTime CreatTime { get; set; }

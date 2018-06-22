@@ -10,9 +10,7 @@ using WebApplication1_identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Caching.Memory;
-using System.Diagnostics;
-using StackExchange.Profiling;
+using Microsoft.Extensions.Caching.Memory; 
 
 namespace WebApplication1_identity.Pages.DD
 {
@@ -33,14 +31,16 @@ namespace WebApplication1_identity.Pages.DD
         public InputModel Input { get; set; }
         public class InputModel
         {
-            [Required(ErrorMessage ="标题必填")] 
+            //[Required(ErrorMessage ="标题必填")] 
             [MaxLength(20, ErrorMessage = "内容不超过10个字")]
             public string Title { get; set; }
 
-            [Required(ErrorMessage ="内容必填")]
+            //[Required(ErrorMessage ="内容必填")]
             [MaxLength(100,ErrorMessage ="内容不超过50个字")]
             public string Content { get; set; }
 
+            [MaxLength(10,ErrorMessage ="关键字不能超过10个字")]
+            public string Tag { get; set; }
             //public ICollection<Team> LTeam { get; set; }
 
             //public Topic LTopic { get; set; }
@@ -55,26 +55,27 @@ namespace WebApplication1_identity.Pages.DD
             var _l = _u.Topic.Select(s => s.Topic).ToList();
             if (_l == null || _l.Count() == 0)
             {
-                StatusMessage = "先关注的主题,才能发布信息:)";
-                return RedirectToPage("./ZhuTi");
+                return RedirectToPage("./ZhuTi", new {msg= "先关注主题,才能发布信息:)" });
             }
             LTopic =new SelectList(_l, "Id","Title");
             LTeam = _u.Team.Select(s => s.Team).ToList();
             if (LTeam == null || LTeam.Count() == 0)
             {
-                StatusMessage = "先设置关注的地方,发布的信息将显示在那里:)";
-                return RedirectToPage("./set");
+                return RedirectToPage("./set",  new { msg = "先关注地方,发布的信息将显示在那里:)" });
             }
             return Page();
         }
-
+        /// <summary>
+        /// 发布
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> OnPostNewAsync()
         {
             if (ModelState.IsValid)
             { 
                 if(Input.LTeam==null|| Input.LTeam.Count()==0)
                 {
-                    ModelState.AddModelError(string.Empty, "显示位置必须勾选一个");
+                    ModelState.AddModelError("Input.LTeam", "显示位置必须勾选一个");
                     return  await OnGetAsync(); 
                 }
                 var info = new Info
@@ -83,6 +84,7 @@ namespace WebApplication1_identity.Pages.DD
                     Content = Input.Content,
                     DDUserId = CurrentUser.Id,
                     TopicId = Input.LTopic,
+                    Tag =Input.Tag,
                     CreateTime= DateTime.Now
                 };
                 info.Teams = new List<InfoTeam>();
@@ -91,7 +93,8 @@ namespace WebApplication1_identity.Pages.DD
                     info.Teams.Add( new InfoTeam { TeamId = t, Info = info }); 
                 }
                 var b = await _testService.FaCreateAsync(info);
-                return RedirectToPage("./myfa");
+                 
+                return RedirectToPage("./myfa" ,new { msg= "请等候审核" });
             }
             return await OnGetAsync();//虽然并不是很好的逻辑，但这样没错误。最好，还是把显示信息分离开？但这里需要的数据要么缓存起来。
         }

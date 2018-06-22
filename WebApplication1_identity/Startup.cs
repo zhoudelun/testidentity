@@ -16,6 +16,7 @@ using WebApplication1_identity.Extensions;
 using Microsoft.Extensions.Logging;
 using StackExchange.Profiling.Internal;
 using StackExchange.Profiling.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1_identity
 {
@@ -24,6 +25,7 @@ namespace WebApplication1_identity
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //MiniProfiler.EntityFrameworkCore
             var initializer = new DiagnosticInitializer(new[] { new RelationalDiagnosticListener() });
             initializer.Start();
         }
@@ -33,17 +35,26 @@ namespace WebApplication1_identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
-                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options=> {
-                options.Password = new PasswordOptions() { RequireNonAlphanumeric = false, RequireUppercase = false,RequireLowercase=false, RequireDigit=false };
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+                options.Password = new PasswordOptions() { RequireNonAlphanumeric = false, RequireUppercase = false, RequireLowercase = false, RequireDigit = false };
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddMemoryCache();//缓存注入
             services.AddMvc()
+                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AuthorizeFolder("/Account/Manage");
@@ -66,7 +77,6 @@ namespace WebApplication1_identity
             services.AddScoped(typeof(ITestService), typeof(TestService));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//注入HttpContextAccessor，使用httpcontext，比如cookie
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,15 +85,20 @@ namespace WebApplication1_identity
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+
                 app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Error");
+                app.UseHsts();
+
             }
-           // InitializeDatabase(app.ApplicationServices);
+            app.UseHttpsRedirection();
+
+            // InitializeDatabase(app.ApplicationServices);
             app.UseStaticFiles();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
 
@@ -94,9 +109,9 @@ namespace WebApplication1_identity
                     template: "{controller}/{action=Index}/{id?}");
             });
             app.UseStaticHttpContext();//action：需设置此，方可使用cookie的自定义方案。
- 
-           // loggerFactory.AddConsole();//?
- 
+
+            // loggerFactory.AddConsole();//?
+
             var _logger = loggerFactory.CreateLogger("Services");
             _logger.LogError
                 ($"Total Services Registered: {100}");
@@ -127,9 +142,8 @@ namespace WebApplication1_identity
             return new Dictionary<Type, Type[]>();
         }
 
-      
-    }
 
+    }
 
 
 }

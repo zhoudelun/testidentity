@@ -18,22 +18,22 @@ namespace WebApplication1_identity.Pages.DD
         public ZhuTiModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
         }
-         
+
         [TempData]
         public string StatusMessage { get; set; }
-
         public IPagedList<Topic>  MyTopic { get; set; }
         public IPagedList<Topic> TeamTopic { get; set; }
-        public  IList<Topic> AllTopic { get; set; }  
-        public  async Task<IActionResult>  OnGetAsync()
+        public  IList<Topic> AllTopic { get; set; }
+        public async Task<IActionResult> OnGetAsync(string msg="")
         {
-            var id = CurrentUser.Id;
-            //MyTopic =  await _testService.GetTopicAsync(id);//我的
+            StatusMessage = msg;
+               var id = CurrentUser.Id;
+            MyTopic = await _testService.GetTopicAsync(id);//我的
             AllTopic = _testService.GetAllTopicAsnyc(11).Result.Items;//所有可用的
 
-            return Page();             
+            return Page();
         }
-  
+
         /// <summary>
         /// 并没用到
         /// 异步获取team的topic

@@ -18,8 +18,11 @@ namespace WebApplication1_identity.Data
         public int TopicId { get; set; }
         public Topic Topic { get; set; }//主题只能是一个了
         public string TagsId { get; set; }//dot split ints.store for show easy.
+
         public ICollection<InfoTag> Tags { get; set; }//包含那些tag.for search from tag.
-        public string TeamsId { get; set; }
+        [MaxLength(10)]
+        public string  Tag { get; set; }//决定弃用tag表，省去关联查询。仅一个tag。----此举，tag上升为副标题概念。
+        public string TeamsId { get; set; }//没有用到？准备弃用
         public ICollection<InfoTeam> Teams { get; set; }//显示在那些团体可见
 
         [MaxLength(20)]

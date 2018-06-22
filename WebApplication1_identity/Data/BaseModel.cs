@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApplication1_identity.Data
 {
     public class BaseModel :PageModel
-    { 
+    {
+
         public   UserManager<ApplicationUser> _userManager;
         public   ITestService _testService;
         private IMemoryCache _memoryCache;

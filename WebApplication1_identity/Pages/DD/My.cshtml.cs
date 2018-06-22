@@ -66,7 +66,7 @@ namespace WebApplication1_identity.Pages.DD
         /// 用户的添加的主题
         /// </summary>
         /// <returns></returns>
-        public IActionResult OnGetMyAddTopic()
+        public IActionResult OnGetMyAddTopic(string msg="")
         {
             ApplicationUser user =   _userManager.FindByNameAsync(User.Identity.Name).Result;
             MyAddTopic = _testService.GetMyAddTopic(user.Id).Result.Items;

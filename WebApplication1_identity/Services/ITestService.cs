@@ -37,5 +37,32 @@ namespace WebApplication1_identity.Services
         Task<IPagedList<Info>> FaGetByUserIdAsync(string Id,int pid);
         Task<IPagedList<Info>> FaGetBySearchAsync(InfoSearchDTO info);
         Task<Info> FaGetByIdAsync(int Id);
+        /// <summary>
+        /// 根据infoid获取 申请合作记录
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<IPagedList<Deal>> DealGetByIdAsync(int Id,int pid);
+        /// <summary>
+        /// 乙方接收的
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
+        Task<IPagedList<Deal>> DealGetMyAsync(string uid,int pid);
+        /// <summary>
+        /// 甲方发起的
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
+        Task<IPagedList<Deal>> DealGetMyChooseAsync(string uid, int pid);
+        Task<bool> DealCreateAsync(Deal deal);
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<bool> DealUpdateAsync(Deal deal);
     }
 }

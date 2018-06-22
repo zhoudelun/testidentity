@@ -20,7 +20,7 @@
                                 <ul>
                                     @foreach (var item in Model.UserExtend.Team)
                                     {
-                                        <li>@(item.Team?.Name??"未设置")</li>
+                                        <li>@(item.Team?.Name ?? "未设置")</li>
                                     }
                                 </ul>
                             </p>
@@ -60,9 +60,9 @@
                     <p>@( Model.UserExtend?.BelongTeam?.Name ?? "未设置" ?? "未找到")  </p>
                     <a asp-page="./Set">修改</a>
                 </section>
-                
+
             }
-        }          
+        }
 
         <br />
 
@@ -89,11 +89,11 @@
                 </section>
             }
         }
-            <section style="display:none;">
-                <form @*method="get" asp-page="./my" *@>
-                    @*<button type="submit" asp-page-handler="AB" >AB</button>*@
-                    <a asp-page-handler="AA">Link Text</a>
-                </form>
-            </section>
-   </div>
-   </div>
+        <section style="display:none;">
+            <form @*method="get" asp-page="./my" *@>
+                @*<button type="submit" asp-page-handler="AB" >AB</button>*@
+                <a asp-page-handler="AA">Link Text</a>
+            </form>
+        </section>
+    </div>
+</div>

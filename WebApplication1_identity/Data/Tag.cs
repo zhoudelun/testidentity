@@ -10,6 +10,7 @@ namespace WebApplication1_identity.Data
     /// <summary>
     /// Tags Table.
     /// 估计有10000个
+    /// 2018.6.22决定不使用tag表，tag以空格分割保留在info表的tags字段即可。
     /// </summary>
     public class Tag:EntityBase
     {

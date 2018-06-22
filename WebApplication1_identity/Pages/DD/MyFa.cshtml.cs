@@ -19,11 +19,13 @@ namespace WebApplication1_identity.Pages.DD
         public MyFaModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
         }
- 
+        [TempData]
+        public string StatusMessage { get; set; }
         public IPagedList<Info> Info { get; set; }
-        public async Task OnGetAsync(int pid=0)
+        public async Task OnGetAsync(int pid=0 )
         {
             Info = await _testService.FaGetByUserIdAsync(CurrentUser.Id,pid);
+            
         }
     }
 }

@@ -10,11 +10,15 @@ using WebApplication1_identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1_identity.Pages.DD
 {
+    [Authorize]
     public class FaListModel : BaseModel
     {
+        [TempData]
+        public string StatusMessage { get; set; }
         public FaListModel(ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
         }
@@ -28,13 +32,26 @@ namespace WebApplication1_identity.Pages.DD
             var id = CurrentUser.Id;
             var u=await _testService.GetInfoInputAsync(CurrentUser.Id);
             LTopic = new SelectList(u.Topic.Select(s=>s.Topic).ToList(), "Id", "Title");
+            if (LTopic == null || LTopic.Count() == 0)
+            { 
+                return RedirectToPage("./ZhuTi" ,new { msg = "先关注主题,才能搜索信息 :)" });
+            }
             LTeam = new SelectList( u.Team.Select(s => s.Team).ToList(),"Id","Name");
+            if (LTeam == null || LTeam.Count() == 0)
+            {
+                return RedirectToPage("./set",new { msg  = "先关注的地方,才能搜索那里的信息 :)" } );
+            }
+            StatusMessage = "请搜索";
             return Page();
         }
         public async Task<IActionResult> OnPostAsync()
         {
             Info= await _testService.FaGetBySearchAsync(new InfoSearchDTO { TopicId = Input.LTopic, TeamId = Input.LTeam });
-            return await OnGetAsync();
+            var id = CurrentUser.Id;
+            var u = await _testService.GetInfoInputAsync(CurrentUser.Id);
+            LTopic = new SelectList(u.Topic.Select(s => s.Topic).ToList(), "Id", "Title");
+            LTeam = new SelectList(u.Team.Select(s => s.Team).ToList(), "Id", "Name");
+            return Page();
         }
         [BindProperty]
         public InputModel Input { get; set; }
@@ -44,6 +61,8 @@ namespace WebApplication1_identity.Pages.DD
 
            
             public long LTeam { get; set; }
+
+            public string Tag { get; set; }
         }
     }
 }

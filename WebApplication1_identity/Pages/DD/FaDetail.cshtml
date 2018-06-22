@@ -7,11 +7,34 @@ var i=Model.Info;
 <div class="row">
     <div>
         <h4>@i.Title</h4>
-        <h5>作者：@i.DDUser.UserName   @i.CreateTime</h5>
-     
-        <div>   
-            @i.Content
-        </div>
-        
+
+        <section>
+            <span>
+                <b>关键词：</b>@i.Tag
+            </span>
+            <span>
+                <b>作者：</b>@i.DDUser.UserName
+            </span>
+            <span>
+                <b>日期：</b> @i.CreateTime
+            </span>
+            <div>
+                @i.Content
+            </div>
+
+        </section>
+        <hr />
+        @{
+            if (Model.Uid == i.DDUser.Id)
+            {
+                //本人，查看申请
+                <a asp-page="./DealList"  asp-route-Id="@i.Id">查看申请</a>
+            }
+            else
+            {
+                <a asp-page="./Deal" asp-page-handler="Apply" asp-route-Id="@i.Id">申请合作</a>
+
+            }
+        }
     </div>
 </div>

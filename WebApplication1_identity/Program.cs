@@ -10,10 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using WebApplication1_identity.Data;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Profiling.Internal;
-using StackExchange.Profiling.Data;
-using StackExchange.Profiling;
-using System.Diagnostics;
 
 namespace WebApplication1_identity
 {
@@ -21,7 +17,7 @@ namespace WebApplication1_identity
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args); 
+            var host = CreateWebHostBuilder(args).Build(); 
             using (var scope = host.Services.CreateScope())
                             {
                                 var services = scope.ServiceProvider;
@@ -70,12 +66,12 @@ namespace WebApplication1_identity
             }
         }
         #endregion
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args) 
-                .UseStartup<Startup>()
-                .ConfigureLogging(builder=> {
-                    builder.Services.AddSingleton<ILoggerProvider, FileLoggerProvider>(); 
-                })
-                .Build();
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+           WebHost.CreateDefaultBuilder(args)
+               .UseStartup<Startup>()
+            .ConfigureLogging(builder => {
+                builder.Services.AddSingleton<ILoggerProvider, FileLoggerProvider>();
+            });
     } 
 }

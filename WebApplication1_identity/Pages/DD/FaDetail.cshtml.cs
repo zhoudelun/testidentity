@@ -18,9 +18,19 @@ namespace WebApplication1_identity.Pages.DD
         }
          
         public Info Info { get; set; }
+         
+        [BindProperty(SupportsGet =true)]
+        public string Uid { get; set; }
         public async Task OnGetAsync(int Id)
         {
             Info = await _testService.FaGetByIdAsync(Id);
+            Uid = CurrentUser.Id;
+
+            
         }
+        public async Task OnPostAsync()
+        {
+        }
+
     }
 }

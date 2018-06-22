@@ -44,10 +44,10 @@ namespace WebApplication1_identity.Pages
 
             Identity1 = User.Identity;
             _logger.LogWarning("jigngao", "{id}", 102);
-            ListTopic=GetCahceList<Topic>(db.Topic,cachekeyTopic);
-            ListInfo = GetCahceList<Info>(db.Info, cachekeyInfo);
-            ListTag = GetCahceList<Tag>(db.Tag, cachekeyTag);
-            ListNote = GetCahceList<Note>(db.Note, cachekeyNote);
+            ListTopic=GetCahceList<Topic>(db.Topic.Where(w => w.IsPublish ?? false), cachekeyTopic);
+            ListInfo = GetCahceList<Info>(db.Info.Where(w => w.IsPublish ?? false), cachekeyInfo);
+            ListTag = GetCahceList<Tag>(db.Tag.Where(w => w.IsPublish ?? false), cachekeyTag);
+            ListNote = GetCahceList<Note>(db.Note.Where(w=>w.IsPublish??false), cachekeyNote);
         }
 
         private List<T> GetCahceList<T>(IQueryable<T> query,   string key)   where T: EntityBase

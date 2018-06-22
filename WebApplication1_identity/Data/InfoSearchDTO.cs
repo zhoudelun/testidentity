@@ -26,5 +26,7 @@ namespace WebApplication1_identity.Data
         /// 标签
         /// </summary>
         public int TagId { get; set; }
+
+        public string Tag { get; set; }
     }
 }

@@ -47,11 +47,11 @@ namespace WebApplication1_identity.Services
 
         public async Task<IPagedList<TeamDTO>> GetTeamAsync(string name)
         {
-            name += "村委会";
+            name += "村";
             var x = await _unitOfWork.GetRepository<Team>()
                  .GetPagedListAsync<TeamDTO>(
                      s => new TeamDTO { id = s.Id, value = s.Name, title = s.Parent.Name },
-                     w => w.Name == name);
+                     w => (w.Name ==name || w.Name== name+"委会" || w.Name== name+"民委员会")  );
             return x;
         }
 
@@ -311,8 +311,8 @@ namespace WebApplication1_identity.Services
             await _unitOfWork.SaveChangesAsync();
 
             var repo2 = _unitOfWork.GetRepository<TopicAudit>();//同事插入关联记录
-            r = await repo.GetFirstOrDefaultAsync<Topic>(s => s, f => f.Title == topic.Title);
-            await repo2.InsertAsync(new TopicAudit { CreatTime = DateTime.Now, Count = 0, TopicId = r.Id });
+            //r = await repo.GetFirstOrDefaultAsync<Topic>(s => s, f => f.Title == topic.Title);
+            await repo2.InsertAsync(new TopicAudit { CreatTime = DateTime.Now, Count = 0, TopicId = topic.Id });
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
@@ -348,19 +348,104 @@ namespace WebApplication1_identity.Services
                 i=>i.Include(q=>q.DDUser)
                 ,true );
         }
-
+        #endregion
+        #region deal
+        public async Task<IPagedList<Deal>> DealGetByIdAsync(int Id,int pid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                .GetPagedListAsync(
+                    s=>s,
+                    w=>w.Info.Id==Id,
+                    null,
+                     i => i.Include(u => u.DDUser),   
+                     pid
+                );
+        }
         public async Task<IPagedList<Info>> FaGetBySearchAsync(InfoSearchDTO info)
         {
             var repo = _unitOfWork.GetRepository<Info>();
             return await repo.GetPagedListAsync<Info>(
                 s => s,
-                w => w.TopicId == info.TopicId && w.Teams.Any(a => a.TeamId == info.TeamId)
+                w => (w.IsPublish ?? false) && w.TopicId == info.TopicId && w.Teams.Any(a => a.TeamId == info.TeamId)
+                && (string.IsNullOrEmpty( info.Tag) || info.Tag==w.Tag)
                 ,
                 q => q.OrderByDescending(o => o.Id),
                 null  //q=>q.Include(i=>i.Teams).ThenInclude(ut => ut.Team)
                 , info.Pid
                 );
         }
+
+        public async Task<bool> DealCreateAsync(Deal deal)
+        {
+            deal.Status =  EnumDealStatus.申请;
+            deal.CreateTime= DateTime.Now;
+            var repo = _unitOfWork.GetRepository<Deal>();
+            await repo.InsertAsync(deal);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+        /// <summary>
+        /// 当前状态是0可以改为1
+        /// 当前是1 可以评价、回复
+        /// </summary>
+        /// <param name="deal"></param>
+        /// <returns></returns>
+        public async Task<bool> DealUpdateAsync(Deal deal)
+        {
+            var repo = _unitOfWork.GetRepository<Deal>();
+            var dealOrign = await repo.GetFirstOrDefaultAsync( w=>w.Id== deal.Id && w.InfoId == deal.InfoId, null, null,false);
+
+            if (deal.Status==EnumDealStatus.成功)//确定合作
+            {
+                if (dealOrign.Status != EnumDealStatus.申请)
+                    return await Task.FromResult<bool>(false);
+
+
+                dealOrign.ChooseTime = DateTime.Now;
+            }
+
+            if (deal.Status == EnumDealStatus.差评)
+            {
+
+                if (!string.IsNullOrEmpty(deal.Comment))//做出了差评
+                    dealOrign.Comment += $"{deal.Comment}";
+            }
+            if(deal.Status == EnumDealStatus.回复) { 
+                if (!string.IsNullOrEmpty(deal.Reply))//做出来回复
+                    dealOrign.Reply += $"{deal.Reply}";
+
+            }
+            dealOrign.Status = deal.Status;
+            repo.Update(dealOrign);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<IPagedList<Deal>> DealGetMyAsync(string uid, int pid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                  .GetPagedListAsync(
+                      s => s,
+                      w => w.DDUserId  == uid,
+                      null,
+                       i => i.Include(u => u.DDUser),
+                       pid
+                  );
+
+        }
+        public async Task<IPagedList<Deal>> DealGetMyChooseAsync(string uid, int pid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                  .GetPagedListAsync(
+                      s => s,
+                      w =>w.Info.DDUserId == uid,
+                      null,
+                       i => i.Include(u => u.DDUser),
+                       pid
+                  );
+
+        }
+
         #endregion
     }
 }

@@ -8,17 +8,17 @@
     <div class="col-md-12">  
         <section>
             @*<h2>发布信息</h2>*@
-            <form method="post"  class="form-horizontal">
-               
+            <form method="post" class="form-horizontal">
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label">主题</label>
                     <div class="col-sm-10">
-                        @Html.DropDownListFor(model => model.LTopic,
+                        @Html.DropDownListFor(model => model.Input.LTopic,
                      Model.LTopic // new List<SelectListItem> { new SelectListItem{Text="请选择" ,Value="-1"}  }
-                   , new { @class = "form-control" })
-                        </div>
+                   , new { @class = "form-control" } )
                     </div>
-                <div class="form-group"> 
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">发布到</label>
                     <div class="col-sm-10">
                         @{
@@ -27,33 +27,42 @@
                                 foreach (var item in Model.LTeam)
                                 {
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" name="LTeam" value="@item.Id" />@item.Name
+                                        <input type="checkbox" name="Input.LTeam" value="@item.Id" />@item.Name
                                     </label>
 
                                 }
                             }
                         }
                         <a asp-page="./Set">添加关注地</a>
-                        </div>
                     </div>
+                    <span asp-validation-for="Input.LTeam" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input asp-for="Input.Tag" class="form-control" placeholder="鸡蛋玉米等" />
+                        <span asp-validation-for="Input.Tag" class="text-danger"></span>
+                    </div>
+                </div>
 
                 <div class="form-group">
-                    <div asp-validation-summary="All" class="text-danger"></div>
+                    @*<div asp-validation-summary="All" class="text-danger"></div>*@
 
-                    <div class="form-group">
-                       <div class="col-sm-12">
-                            <input type="text" placeholder="标题" name="Title" class="form-control" maxlength="20"/>
-                            <span asp-validation-for="Input.Title" class="text-danger"></span>
-                        </div>
+
+                    <div class="col-sm-12">
+                        <input asp-for="Input.Title" class="form-control" maxlength="20" placeholder="标题" />
+                        <span asp-validation-for="Input.Title" class="text-danger"></span>
                     </div>
 
-                
-                    <div class="form-group"> 
-                        <div class="col-sm-12">
-                            <textarea name="Content" placeholder="描述" cols="3" rows="4" class="form-control" maxlength="50"></textarea>
-                            <span asp-validation-for="Input.Content" class="text-danger"></span>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <textarea asp-for="Input.Content" placeholder="描述" cols="3" rows="4" class="form-control" maxlength="50" ></textarea>
+                        @*<textarea name="Input.Content" placeholder="描述" cols="3" rows="4" class="form-control" maxlength="50"></textarea>*@
+                        <span asp-validation-for="Input.Content" class="text-danger"></span>
                     </div>
+
+
+
                     <div class="clearfix" style="margin-bottom: 10px;"> </div><!-- 清除浮动 -->
                     <button type="submit" asp-page-handler="New" class="btn btn-primary  center-block">发布</button>
                 </div>
