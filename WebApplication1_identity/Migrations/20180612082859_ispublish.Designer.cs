@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1_identity.Data;
 
 namespace WebApplication1_identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180612082859_ispublish")]
+    partial class ispublish
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,40 +191,6 @@ namespace WebApplication1_identity.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("WebApplication1_identity.Data.Deal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("ChooseTime");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime>("CreateTime");
-
-                    b.Property<string>("DDUserId");
-
-                    b.Property<int>("InfoId");
-
-                    b.Property<bool?>("IsPublish");
-
-                    b.Property<string>("Remark");
-
-                    b.Property<string>("Reply")
-                        .HasMaxLength(200);
-
-                    b.Property<sbyte>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DDUserId");
-
-                    b.HasIndex("InfoId");
-
-                    b.ToTable("Deal");
-                });
-
             modelBuilder.Entity("WebApplication1_identity.Data.Info", b =>
                 {
                     b.Property<int>("Id")
@@ -238,9 +206,6 @@ namespace WebApplication1_identity.Migrations
                     b.Property<int>("InfoStatus");
 
                     b.Property<bool?>("IsPublish");
-
-                    b.Property<string>("Tag")
-                        .HasMaxLength(10);
 
                     b.Property<string>("TagsId");
 
@@ -556,18 +521,6 @@ namespace WebApplication1_identity.Migrations
                     b.HasOne("WebApplication1_identity.Data.Team", "BelongTeam")
                         .WithMany()
                         .HasForeignKey("BelongTeamId");
-                });
-
-            modelBuilder.Entity("WebApplication1_identity.Data.Deal", b =>
-                {
-                    b.HasOne("WebApplication1_identity.Data.ApplicationUser", "DDUser")
-                        .WithMany()
-                        .HasForeignKey("DDUserId");
-
-                    b.HasOne("WebApplication1_identity.Data.Info", "Info")
-                        .WithMany()
-                        .HasForeignKey("InfoId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WebApplication1_identity.Data.Info", b =>

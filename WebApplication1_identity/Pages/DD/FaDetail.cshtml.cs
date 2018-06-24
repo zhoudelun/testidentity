@@ -21,12 +21,21 @@ namespace WebApplication1_identity.Pages.DD
          
         [BindProperty(SupportsGet =true)]
         public string Uid { get; set; }
+        public bool HasApplyed { get; // private
+            set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id">infoid</param>
+        /// <returns></returns>
         public async Task OnGetAsync(int Id)
         {
             Info = await _testService.FaGetByIdAsync(Id);
             Uid = CurrentUser.Id;
 
-            
+            //当前查看人是否申请过？
+            HasApplyed=   _testService.DealCheckHasApplyedAsync(Id,Uid);
         }
         public async Task OnPostAsync()
         {

@@ -1,0 +1,30 @@
+﻿@page
+@model WebApplication1_identity.Pages.DD.DealCommentModel
+@{
+    ViewData["Title"] = "DealComment";
+}
+
+<h2>差评</h2>
+
+
+<div class="row">
+    <div class="clearfix" style="margin-bottom: 10px;">                </div><!-- 清除浮动 -->
+
+    <section>
+        <div class="col-md-12">
+            <p class="text-warning">
+                给个差评：合作成功后，觉得不愉快，对本次合作进行差评。
+            </p>
+        </div>
+        <form method="post" class="form-horizontal">
+            <input asp-for="Input.Id" type="hidden" />
+            <input asp-for="Input.InfoId" type="hidden" />
+
+            <div class="form-group">
+                <input asp-for="Input.Remark" placeholder="内容" class="form-control" maxlength="50" />
+                <button type="submit" class="btn btn-primary  center-block"> 提交</button>
+            </div>
+        </form>
+    </section>
+
+</div>

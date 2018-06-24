@@ -348,33 +348,58 @@ namespace WebApplication1_identity.Services
                 i=>i.Include(q=>q.DDUser)
                 ,true );
         }
-        #endregion
-        #region deal
-        public async Task<IPagedList<Deal>> DealGetByIdAsync(int Id,int pid)
-        {
-            return await _unitOfWork.GetRepository<Deal>()
-                .GetPagedListAsync(
-                    s=>s,
-                    w=>w.Info.Id==Id,
-                    null,
-                     i => i.Include(u => u.DDUser),   
-                     pid
-                );
-        }
         public async Task<IPagedList<Info>> FaGetBySearchAsync(InfoSearchDTO info)
         {
             var repo = _unitOfWork.GetRepository<Info>();
             return await repo.GetPagedListAsync<Info>(
                 s => s,
                 w => (w.IsPublish ?? false) && w.TopicId == info.TopicId && w.Teams.Any(a => a.TeamId == info.TeamId)
-                && (string.IsNullOrEmpty( info.Tag) || info.Tag==w.Tag)
+                && (string.IsNullOrEmpty(info.Tag) || info.Tag == w.Tag)
                 ,
                 q => q.OrderByDescending(o => o.Id),
                 null  //q=>q.Include(i=>i.Teams).ThenInclude(ut => ut.Team)
                 , info.Pid
                 );
         }
-
+        #endregion
+        #region deal
+        /// <summary>
+        /// 获取infoid的所有deal
+        /// </summary>
+        /// <param name="Id">infoid</param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
+        public async Task<IPagedList<Deal>> DealGetByIdAsync(int Id,int pid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                .GetPagedListAsync(
+                    s=>s,
+                  w=>w.InfoId==Id,//  w =>w.Info.Id==Id,
+                    null,
+                     i => i.Include(u => u.DDUser)
+                     .Include(u=>u.Info).ThenInclude(info=>info.DDUser),   
+                     pid
+                );
+        }
+        /// <summary>
+        /// 获取我对某个infoid的deal
+        /// </summary>
+        /// <param name="Id">infoid</param>
+        /// <returns></returns>
+        public async Task<Deal> DealGetMyByIdAsync(int Id,string uid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                .GetFirstOrDefaultAsync(
+                    w=>w.InfoId== Id && w.DDUserId== uid,
+                    null, null,true
+                );
+        }
+      
+        /// <summary>
+        /// 添加一个申请
+        /// </summary>
+        /// <param name="deal"></param>
+        /// <returns></returns>
         public async Task<bool> DealCreateAsync(Deal deal)
         {
             deal.Status =  EnumDealStatus.申请;
@@ -385,42 +410,68 @@ namespace WebApplication1_identity.Services
             return true;
         }
         /// <summary>
+        /// 修改申请
         /// 当前状态是0可以改为1
         /// 当前是1 可以评价、回复
+        /// MySqlException: Cannot add or update a child row: a foreign key constraint fails (`mydd0413`.`deal`, CONSTRAINT `FK_Deal_Info_InfoId` FOREIGN KEY (`InfoId`) REFERENCES `info` (`Id`) ON DELETE CASCADE) 
         /// </summary>
         /// <param name="deal"></param>
         /// <returns></returns>
         public async Task<bool> DealUpdateAsync(Deal deal)
         {
             var repo = _unitOfWork.GetRepository<Deal>();
-            var dealOrign = await repo.GetFirstOrDefaultAsync( w=>w.Id== deal.Id && w.InfoId == deal.InfoId, null, null,false);
+            var dealOrign = await repo.GetFirstOrDefaultAsync( w=>w.Id== deal.Id && w.InfoId == deal.InfoId, null, 
+                i=>i.Include(x=>x.Info).ThenInclude(info=>info.DDUser)
+                ,false);
 
             if (deal.Status==EnumDealStatus.成功)//确定合作
             {
-                if (dealOrign.Status != EnumDealStatus.申请)
+                if (dealOrign.Info.DDUser.Id == deal.DDUserId && dealOrign.Status == EnumDealStatus.申请)
+                {
+                    dealOrign.ChooseTime = DateTime.Now;
+                }
+                else
+                {
                     return await Task.FromResult<bool>(false);
-
-
-                dealOrign.ChooseTime = DateTime.Now;
+                }              
             }
 
             if (deal.Status == EnumDealStatus.差评)
             {
-
-                if (!string.IsNullOrEmpty(deal.Comment))//做出了差评
-                    dealOrign.Comment += $"{deal.Comment}";
+                if(dealOrign.DDUserId == deal.DDUserId)
+                {
+                    if (!string.IsNullOrEmpty(deal.Comment))//做出了差评
+                        dealOrign.Comment += $"{deal.Comment}";
+                }
+                else
+                { 
+                    return await Task.FromResult<bool>(false);
+                }
+                
             }
-            if(deal.Status == EnumDealStatus.回复) { 
-                if (!string.IsNullOrEmpty(deal.Reply))//做出来回复
-                    dealOrign.Reply += $"{deal.Reply}";
-
+            if(deal.Status == EnumDealStatus.回复) {
+                if (dealOrign.Info.DDUser.Id == deal.DDUserId)
+                {
+                    if (!string.IsNullOrEmpty(deal.Reply))//做出来回复
+                        dealOrign.Reply += $"{deal.Reply}";
+                }
+                else
+                {
+                    return await Task.FromResult<bool>(false);
+                }
             }
+
             dealOrign.Status = deal.Status;
             repo.Update(dealOrign);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
-
+        /// <summary>
+        /// 申请人的
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public async Task<IPagedList<Deal>> DealGetMyAsync(string uid, int pid)
         {
             return await _unitOfWork.GetRepository<Deal>()
@@ -433,6 +484,12 @@ namespace WebApplication1_identity.Services
                   );
 
         }
+        /// <summary>
+        /// 发起人的
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public async Task<IPagedList<Deal>> DealGetMyChooseAsync(string uid, int pid)
         {
             return await _unitOfWork.GetRepository<Deal>()
@@ -440,10 +497,22 @@ namespace WebApplication1_identity.Services
                       s => s,
                       w =>w.Info.DDUserId == uid,
                       null,
-                       i => i.Include(u => u.DDUser),
+                       i => i.Include(u => u.DDUser)
+                       .Include(u=>u.Info).ThenInclude(info=>info.DDUser),
                        pid
                   );
 
+        }
+        /// <summary>
+        /// 检查是否申请过了
+        /// </summary>
+        /// <param name="id">当前infoid</param>
+        /// <param name="uid">当前用户</param>
+        /// <returns></returns>
+        public  bool DealCheckHasApplyedAsync(int id,string uid)
+        {
+            return   _unitOfWork.GetRepository<Deal>()
+                .Count(w => w.InfoId == id && w.DDUserId == uid) >0;
         }
 
         #endregion

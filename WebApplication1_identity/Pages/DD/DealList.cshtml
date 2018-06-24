@@ -1,0 +1,56 @@
+﻿@page
+@model DealListModel
+@{
+
+    if (Model.DealList != null && Model.DealList.TotalCount > 0)
+    {
+        <table class="table">
+            <tr>
+                <th>申请人</th>
+                <th>申请时间</th>
+                <th>留言</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            @foreach (var item in Model.DealList.Items)
+            {
+            <tr>
+                <td>@item.DDUser.UserName</td>
+                <td>@item.CreateTime</td>
+                <td>@item.Remark</td>
+                <td>@item.Status</td>
+                @if (item.Info.DDUserId == Model.CurrentUser.Id)//发起人
+                {
+                    @if (item.Status == EnumDealStatus.申请)
+                    {
+                        <td><a asp-page="./Deal" asp-page-handler="Choose" asp-route-Id="@item.Id" asp-route-InfoId="@item.InfoId">确定合作</a></td>
+                    }
+                    else if (item.Status == EnumDealStatus.差评)
+                    {
+                        <td><a asp-page="./DealReply"   asp-route-Id="@item.Id" asp-route-InfoId="@item.InfoId">回复差评</a></td>
+
+                    }
+                    else { <td></td>}
+                }
+                else if (item.DDUserId == Model.CurrentUser.Id && item.Status== EnumDealStatus.成功)//申请人
+                {
+                    <td><a asp-page="./DealComment"   asp-route-Id="@item.Id"  asp-route-InfoId="@item.InfoId">我要差评</a></td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+
+            }
+        </table>
+    }
+    else
+    {
+
+        <p class="text-warning">
+            还没有人申请合作，请稍等 :)
+        </p>
+
+    }
+}

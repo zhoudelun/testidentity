@@ -1,0 +1,30 @@
+﻿@page
+@model WebApplication1_identity.Pages.DD.DealReplyModel
+@{
+    ViewData["Title"] = "DealReply";
+}
+
+<h2>回复差评</h2>
+
+
+<div class="row">
+    <div class="clearfix" style="margin-bottom: 10px;">                </div><!-- 清除浮动 -->
+
+    <section>
+        <div class="col-md-12">
+            <p class="text-warning">
+                护肤差评：乙方给了差评，对本次合作进行解释。
+            </p>
+        </div>
+        <form method="post" class="form-horizontal">
+            <input asp-for="Input.Id" type="hidden" />
+            <input asp-for="Input.InfoId" type="hidden" />
+
+            <div class="form-group">
+                <input asp-for="Input.Remark" placeholder="内容" class="form-control" maxlength="50" />
+                <button type="submit" class="btn btn-primary  center-block"> 提交</button>
+            </div>
+        </form>
+    </section>
+
+</div>

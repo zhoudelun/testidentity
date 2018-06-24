@@ -28,12 +28,18 @@ var i=Model.Info;
             if (Model.Uid == i.DDUser.Id)
             {
                 //本人，查看申请
-                <a asp-page="./DealList"  asp-route-Id="@i.Id">查看申请</a>
+                <a asp-page="./DealList" asp-route-id="@i.Id">查看申请</a>
             }
             else
             {
-                <a asp-page="./Deal" asp-page-handler="Apply" asp-route-Id="@i.Id">申请合作</a>
-
+                if (!Model.HasApplyed)//还没申请过
+                {
+                    <a asp-page="./Deal" asp-page-handler="Apply" asp-route-id="@i.Id">申请合作</a>
+                }
+                else
+                {
+                    <a asp-page="./Deal"   asp-route-id="@i.Id">查看合作</a>
+                }
             }
         }
     </div>

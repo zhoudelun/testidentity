@@ -43,6 +43,8 @@ namespace WebApplication1_identity.Services
         /// <param name="Id"></param>
         /// <returns></returns>
         Task<IPagedList<Deal>> DealGetByIdAsync(int Id,int pid);
+
+        Task<Deal> DealGetMyByIdAsync(int Id, string uid);
         /// <summary>
         /// 乙方接收的
         /// </summary>
@@ -64,5 +66,12 @@ namespace WebApplication1_identity.Services
         /// <param name="input"></param>
         /// <returns></returns>
         Task<bool> DealUpdateAsync(Deal deal);
+        /// <summary>
+        /// 简单判断下是否存在
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        bool DealCheckHasApplyedAsync(int id, string uid);
     }
 }

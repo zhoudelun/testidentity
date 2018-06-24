@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1_identity.Data;
 
 namespace WebApplication1_identity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180622081208_Deal")]
+    partial class Deal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,7 +214,7 @@ namespace WebApplication1_identity.Migrations
                     b.Property<string>("Reply")
                         .HasMaxLength(200);
 
-                    b.Property<sbyte>("Status");
+                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 

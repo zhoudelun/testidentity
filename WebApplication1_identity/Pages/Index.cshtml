@@ -70,7 +70,7 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h2>主题排行</h2>
+        <h3>主题排行</h3>
         <ul> 
             @{ foreach (var item in Model.ListTopic)
                 {
@@ -80,17 +80,17 @@
         </ul>
     </div>
     <div class="col-md-3">
-        <h2>热门标签</h2>
+        <h3>热门关键词</h3>
         <ul>
-            @{ foreach (var item in Model.ListTopic)
+            @{ foreach (var item in Model.ListTag)
                 {
-                    <li><a asp-page="./DD/TopicDetail"   asp-route-id="@item.Id">@item.Title</a></li>
+                    <li><a asp-page="./DD/BiaoQian"   asp-route-id="@item.Id">@item.Title</a></li>
                 }
             }
         </ul>
     </div>
     <div class="col-md-3">
-        <h2>最新信息</h2>
+        <h3>最新信息</h3>
         <ul>
 
             @{ foreach (var item in Model.ListInfo)
@@ -105,7 +105,7 @@
         </ul>
     </div>
     <div class="col-md-3">
-        <h2>最新公告</h2>
+        <h3>最新公告</h3>
         <ul>
             <li><a asp-page="./About">关于(_　_)。゜zｚＺ</a></li>
             @{ foreach (var item in Model.ListNote)

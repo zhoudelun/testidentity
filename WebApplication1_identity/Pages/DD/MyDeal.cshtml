@@ -1,0 +1,90 @@
+﻿@page
+
+@model WebApplication1_identity.Pages.DD.MyDealModel
+@{ ViewData["Title"] = "MyDeal";
+}
+<div class="row">
+    <section>
+    @{
+
+        if (Model.MyDeals != null && Model.MyDeals.TotalCount > 0)
+        {
+            <table class="table">
+                <tr>
+                    <th>我的留言</th>
+                    <th>时间</th>
+                    <th>状态</th>
+                    <th>我的评价</th>
+                    <th>甲方回复</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (var item in Model.MyDeals.Items)
+                {
+                <tr>
+                    <td>@item.Remark</td>
+                    <td>@item.CreateTime</td>
+                    <td>@item.Status</td>
+                    <td>@item.Comment</td>
+                    <td>@item.Reply</td>
+                    @if ( Model.CurrentUser.Id== item.DDUserId && item.Status== EnumDealStatus.成功)
+                    {
+                        <td><a asp-page="./DealComment" asp-route-id="@item.Id" asp-route-infoid="@item.InfoId">去差评</a></td>
+                    }
+                    else
+                    {
+                        <td></td>}
+                </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p class="text-info">还没申请任何合作</p>
+        }
+
+        if (Model.MyChooseDeals != null && Model.MyChooseDeals.TotalCount > 0)
+        {
+            <table class="table">
+                <tr>
+                    <th>乙方留言</th>
+                    <th>时间</th>
+                    <th>状态</th>
+                    <th>乙方评价</th>
+                    <th>我的回复</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (var item in Model.MyChooseDeals.Items)
+                {
+                <tr>
+                    <td>@item.Remark</td>
+                    <td>@item.CreateTime</td>
+                    <td>@item.Status</td>
+                    <td>@item.Comment</td>
+                    <td>@item.Reply</td>
+                    @if (item.Status == EnumDealStatus.申请 && item.Info.DDUser.Id == Model.CurrentUser.Id)
+                    {
+                        <td><a asp-page="./Deal" asp-page-handler="Choose" asp-route-id="@item.Id" asp-route-infoId="@item.InfoId">确定合作</a></td>
+                    }
+                    else if (item.Status == EnumDealStatus.差评 && item.Info.DDUserId == Model.CurrentUser.Id)
+                    {
+                        <td><a asp-page="./DealReply" asp-route-id="@item.Id" asp-route-infoId="@item.InfoId">回复差评</a></td>
+                    }
+                    else { 
+
+                        <td></td>
+                    }
+                </tr>
+                }
+            </table>
+
+        }
+        else
+        { <p class="text-info">还没发起任何合作</p>
+
+
+        }
+
+    }
+
+    </section>
+</div>

@@ -1,0 +1,93 @@
+﻿@page
+
+@model WebApplication1_identity.Pages.DD.DealModel
+@{
+    ViewData["Title"] = "申请合作";
+}
+
+
+<div class="row">
+    <div class="clearfix" style="margin-bottom: 10px;">                </div><!-- 清除浮动 -->
+ 
+    @if (Model.IsPublisher)
+    {
+        <section>
+             <a asp-page="./DealList" asp-route-id="@Model.Input.InfoId">查看申请</a>        
+        </section>
+
+    }
+    @if (Model.MyDeal != null)
+    {
+        var i = Model.MyDeal;
+        <section>
+            <div>
+                <ul>
+                    <li>
+                        <span>
+                            <b>我的留言：</b>@i.Remark
+                        </span>
+                    </li>
+
+                    <li>
+                        <span>
+                            <b>申请时间：</b>@i.CreateTime
+                        </span>
+                    </li>
+                    <li>
+
+                        <span>
+                            <b>状态：</b>@i.Status
+                        </span>
+                    </li>
+                    <li>
+                        <span>
+                            <b>我的评价：</b>@i.Comment
+                        </span>
+
+                    </li>
+                    <li>
+                        <span>
+                            <b>甲方回复：</b>@i.Reply
+                        </span>
+                    </li>
+
+
+                    @if (i.Status == EnumDealStatus.成功)
+                    {
+
+                        <li>
+                            <span>
+                                <a asp-page="./DealComment" asp-route-id="@i.Id" asp-route-infoId="@i.InfoId">去差评</a>
+
+                            </span>
+                        </li>}
+
+                </ul>
+            </div>
+        </section>
+
+
+    }
+    else
+    {
+        <section>
+            <div class="col-md-12">
+                <p class="text-warning">
+                    申请合作：等候发起人回复，达成合作。
+                    后期如发生问题，可对本次合作进行差评。
+                </p>
+            </div>
+            <form method="post" class="form-horizontal">
+                <input asp-for="Input.InfoId" type="hidden" />
+                <div class="form-group">
+                    <input asp-for="Input.Remark" placeholder="留言内容" class="form-control" maxlength="50" />
+                    <button type="submit" class="btn btn-primary  center-block"> 申请合作</button>
+                </div>
+            </form>
+        </section>
+
+
+    }
+
+
+</div>
