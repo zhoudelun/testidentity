@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ using WebApplication1_identity.Services;
 
 namespace WebApplication1_identity.Pages.DD
 {
+    [Authorize]
     public class DealReplyModel :BaseModel
     {
 
@@ -29,7 +31,6 @@ namespace WebApplication1_identity.Pages.DD
             //[Required(ErrorMessage ="标题必填")] 
             [MaxLength(50, ErrorMessage = "内容不超过50个字")]
             public string Remark { get; set; }
-            public int InfoId { get; set; }
             public int Id { get; set; }
         }
         /// <summary>
@@ -37,18 +38,18 @@ namespace WebApplication1_identity.Pages.DD
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        public void OnGetAsync(int Id, int InfoId)
+        public void OnGetAsync(int Id )
         {
             Input.Id = Id;
-            Input.InfoId = InfoId; 
+          
         }
 
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var deal = new Deal { Id = Input.Id, InfoId = Input.InfoId, Reply = Input.Remark, Status = EnumDealStatus.回复, DDUserId = CurrentUser.Id };
+            var deal = new Deal { Id = Input.Id,   Reply = Input.Remark, Status = EnumDealStatus.回复, DDUserId = CurrentUser.Id };
             await _testService.DealUpdateAsync(deal);
-            return RedirectToPage("./MyDeal");
+            return RedirectToPage("./DealUQ", new { id = Input.Id });
         }
     }
 }

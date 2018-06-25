@@ -53,7 +53,7 @@
 
                 <table class="table">
                     <tr>
-                        <th>标题</th>
+                        <th>标题</th><th>关键字</th>
                         <th>时间</th>
                     </tr>
 
@@ -64,8 +64,11 @@
                         <tr>
                             <td>
                                 <a asp-page="./FaDetail" asp-route-id="@item.Id" target="_blank">
-                                    @item.Title
+                                    @(string.IsNullOrEmpty(item.Title)?"无标题": item.Title)
                                 </a>
+                            </td>
+                            <td>
+                                @item.Tag
                             </td>
                             <td>@item.CreateTime</td>
                         </tr>

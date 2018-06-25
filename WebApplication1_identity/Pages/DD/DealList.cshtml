@@ -23,18 +23,18 @@
                 {
                     @if (item.Status == EnumDealStatus.申请)
                     {
-                        <td><a asp-page="./Deal" asp-page-handler="Choose" asp-route-Id="@item.Id" asp-route-InfoId="@item.InfoId">确定合作</a></td>
+                        <td><a asp-page="./DealUQ" asp-page-handler="Choose" asp-route-id="@item.Id"  >确定合作</a></td>
                     }
                     else if (item.Status == EnumDealStatus.差评)
                     {
-                        <td><a asp-page="./DealReply"   asp-route-Id="@item.Id" asp-route-InfoId="@item.InfoId">回复差评</a></td>
+                        <td><a asp-page="./DealReply"   asp-route-id="@item.Id"  >回复差评</a></td>
 
                     }
                     else { <td></td>}
                 }
                 else if (item.DDUserId == Model.CurrentUser.Id && item.Status== EnumDealStatus.成功)//申请人
                 {
-                    <td><a asp-page="./DealComment"   asp-route-Id="@item.Id"  asp-route-InfoId="@item.InfoId">我要差评</a></td>
+                    <td><a asp-page="./DealComment"   asp-route-Id="@item.Id"  >我要差评</a></td>
                 }
                 else
                 {

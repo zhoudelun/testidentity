@@ -394,7 +394,39 @@ namespace WebApplication1_identity.Services
                     null, null,true
                 );
         }
-      
+        /// <summary>
+        /// 根据id
+        /// </summary>
+        /// <param name="Id">id非infoid</param>
+        /// <returns></returns>
+        public async Task<Deal> DealGetByIdAsync(int id )
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                .GetFirstOrDefaultAsync(
+                    w => w.Id == id,
+                    null, 
+                    i=>i.Include(d=>d.Info).ThenInclude(info=>info.DDUser)
+                    , true
+                );
+        }
+
+        /// <summary>
+        /// 暂未使用：因为我发布的不止一个。
+        /// 包含我申请的DealGetMyByIdAsync和我发布的
+        /// </summary>
+        /// <param name="id">某个infoid</param>
+        /// <param name="uid">我的uid</param>
+        /// <returns></returns>
+        public async Task<Deal> DealGetByIdBothAsync(int id, string uid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                .GetFirstOrDefaultAsync(
+                    w => w.InfoId == id && ( w.DDUserId == uid ||w.Info.DDUserId== uid) ,
+                    null, i=>i.Include(f=>f.Info).ThenInclude(info=>info.DDUser), true
+                );
+        }
+
+
         /// <summary>
         /// 添加一个申请
         /// </summary>
@@ -420,7 +452,9 @@ namespace WebApplication1_identity.Services
         public async Task<bool> DealUpdateAsync(Deal deal)
         {
             var repo = _unitOfWork.GetRepository<Deal>();
-            var dealOrign = await repo.GetFirstOrDefaultAsync( w=>w.Id== deal.Id && w.InfoId == deal.InfoId, null, 
+            var dealOrign = await repo.GetFirstOrDefaultAsync( w=>w.Id== deal.Id //&& w.InfoId == deal.InfoId
+                 ,
+                null, 
                 i=>i.Include(x=>x.Info).ThenInclude(info=>info.DDUser)
                 ,false);
 
@@ -504,6 +538,25 @@ namespace WebApplication1_identity.Services
 
         }
         /// <summary>
+        /// 申请人和发起人 都包含
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
+        public async Task<IPagedList<Deal>> DealGetBothChooseAsync(string uid, int pid)
+        {
+            return await _unitOfWork.GetRepository<Deal>()
+                  .GetPagedListAsync(
+                      s => s,
+                      w => w.Info.DDUserId == uid || w.DDUserId == uid,
+                      null,
+                       i => i.Include(u => u.DDUser)
+                       .Include(u => u.Info).ThenInclude(info => info.DDUser),
+                       pid
+                  );
+
+        }
+        /// <summary>
         /// 检查是否申请过了
         /// </summary>
         /// <param name="id">当前infoid</param>
@@ -514,7 +567,11 @@ namespace WebApplication1_identity.Services
             return   _unitOfWork.GetRepository<Deal>()
                 .Count(w => w.InfoId == id && w.DDUserId == uid) >0;
         }
-
+        public bool DealCheckIsPublisherAsync(int id,string uid)
+        {
+            return _unitOfWork.GetRepository<Info>()
+                .Count(w => w.Id == id && w.DDUserId == uid) > 0;
+        }
         #endregion
     }
 }

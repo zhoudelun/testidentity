@@ -45,6 +45,10 @@ namespace WebApplication1_identity.Services
         Task<IPagedList<Deal>> DealGetByIdAsync(int Id,int pid);
 
         Task<Deal> DealGetMyByIdAsync(int Id, string uid);
+
+        Task<Deal> DealGetByIdAsync(int Id );
+        
+        Task<Deal> DealGetByIdBothAsync(int id, string uid);
         /// <summary>
         /// 乙方接收的
         /// </summary>
@@ -59,6 +63,15 @@ namespace WebApplication1_identity.Services
         /// <param name="pid"></param>
         /// <returns></returns>
         Task<IPagedList<Deal>> DealGetMyChooseAsync(string uid, int pid);
+        /// <summary>
+        /// 甲乙方都有了
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pid"></param>
+        /// <returns></returns>
+        Task<IPagedList<Deal>> DealGetBothChooseAsync(string uid, int pid);
+
+        
         Task<bool> DealCreateAsync(Deal deal);
         /// <summary>
         /// 修改
@@ -73,5 +86,7 @@ namespace WebApplication1_identity.Services
         /// <param name="uid"></param>
         /// <returns></returns>
         bool DealCheckHasApplyedAsync(int id, string uid);
+        //判断是否是发布者
+        bool DealCheckIsPublisherAsync(int id, string uid);
     }
 }

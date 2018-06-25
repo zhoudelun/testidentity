@@ -17,6 +17,12 @@ namespace WebApplication1_identity.Pages.DD
     [Authorize]
     public class DealModel : BaseModel
     {
+        /// <summary>
+        /// 通过infoid
+        /// </summary>
+        /// <param name="testService"></param>
+        /// <param name="userManager"></param>
+        /// <param name="memoryCache"></param>
         public DealModel(
             ITestService testService, UserManager<ApplicationUser> userManager, IMemoryCache memoryCache) : base(testService, userManager, memoryCache)
         {
@@ -25,6 +31,7 @@ namespace WebApplication1_identity.Pages.DD
         public InputModel Input { get; set; }
         public Deal MyDeal { get; private set; }
         public bool IsPublisher { get; private set; }
+        public Deal UQDeal { get; private set; }
 
         public class InputModel
         {
@@ -41,41 +48,26 @@ namespace WebApplication1_identity.Pages.DD
             public string Reply { get; set; }
         }
         /// <summary>
-        /// show deal of mine 
+        /// mydeal:我的申请 --可能还没申请
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id">信息infoid</param>
         public async Task OnGetAsync(int id)
         {
             //是自己，直接跳转到查看申请
-            IsPublisher = _testService.DealCheckHasApplyedAsync(id, CurrentUser.Id); 
+            IsPublisher = _testService.DealCheckIsPublisherAsync(id, CurrentUser.Id); 
             Input.InfoId = id;
-            MyDeal = await _testService. DealGetMyByIdAsync(id,  CurrentUser.Id);
+            MyDeal = await _testService.DealGetMyByIdAsync(id,  CurrentUser.Id);
         }
-       
+    
         /// <summary>
         /// 申请合作
         /// </summary>
         /// <param name="Id">信息id</param>
-      
+
         public  void  OnGetApplyAsync(int id)
         {
             Input.InfoId = id; 
-        }
-        /// <summary>
-        /// 做出回复，确定合作
-        /// </summary>
-        /// <param name="Id">合作id</param>
-        /// <param name="InfoId">信息id</param>
-        /// <param name="pid"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> OnGetChooseAsync(int id, int infoId)
-        {
-            var deal = new Deal { Id = id, InfoId = infoId, Status= EnumDealStatus.成功,ChooseTime= DateTime.Now, DDUserId =CurrentUser.Id };
-            await _testService.DealUpdateAsync(deal);
-            return RedirectToPage("./MyDeal"//,new { handler = "Choose" }
-                );
-        }
-
+        } 
       
         /// <summary>
         /// 提交申请合作

@@ -2,7 +2,7 @@
 
 @model WebApplication1_identity.Pages.DD.DealModel
 @{
-    ViewData["Title"] = "申请合作";
+    ViewData["Title"] = "合作";
 }
 
 
@@ -10,16 +10,17 @@
     <div class="clearfix" style="margin-bottom: 10px;">                </div><!-- 清除浮动 -->
  
     @if (Model.IsPublisher)
-    {
+    { 
         <section>
              <a asp-page="./DealList" asp-route-id="@Model.Input.InfoId">查看申请</a>        
         </section>
 
-    }
-    @if (Model.MyDeal != null)
+
+    }else if (Model.MyDeal != null)
     {
         var i = Model.MyDeal;
         <section>
+            <a asp-page="./FaDetail" asp-route-id="@i.InfoId">返回信息</a>
             <div>
                 <ul>
                     <li>
